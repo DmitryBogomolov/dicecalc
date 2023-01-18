@@ -43,7 +43,7 @@ func CalculateProbabilities(schema DiceSchema) Probabilities {
 	count := max - min + 1
 	slots := make([]int, count)
 	for i := 0; i < count; i++ {
-		slots[i] = calculateSlot(min+i, schema.Sides, schema.Count)
+		slots[i] = calculateSlot(min+i, schema)
 	}
 	total := int(math.Pow(float64(schema.Sides), float64(schema.Count)))
 	return Probabilities{
@@ -62,7 +62,35 @@ func calculateFactorials(count int) []int {
 	return values
 }
 
-func calculateSlot(value int, sides int, count int) int {
+func initSlotDices(value int, schema DiceSchema) []int {
+	items := make([]int, schema.Count)
+	for i := range items {
+		items[i] = 1
+	}
+	rest := value - schema.Count
+	k := schema.Count - 1
+	for rest > 0 {
+		portion := schema.Sides - 1
+		if portion > rest {
+			portion = rest
+		}
+		rest -= portion
+		items[k] += portion
+		k--
+	}
+	return items
+}
+
+func calculateSlot(value int, schema DiceSchema) int {
+	initial := initSlotDices(value, schema)
+	for k := len(initial) - 1; k > 0; k-- {
+		copy := append([]int(nil), initial...)
+		for copy[k] > copy[k-1] {
+			sample := copy[k] - 1
+			for i := k - 1; i >= 0; i-- {
+			}
+		}
+	}
 	return 0
 }
 
