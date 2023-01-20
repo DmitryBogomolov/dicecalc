@@ -1,52 +1,16 @@
 package dicecalc
 
-import "math"
-
-type DiceSchema struct {
-	Sides int
-	Count int
-}
-
-type Probabilities struct {
-	min    int
-	max    int
-	values []float64
-}
-
-func (probabilities *Probabilities) Min() int {
-	return probabilities.min
-}
-
-func (probabilities *Probabilities) Max() int {
-	return probabilities.max
-}
-
-func (probabilities *Probabilities) Probability(value int) float64 {
-	if probabilities.min <= value && value <= probabilities.max {
-		return probabilities.values[value+probabilities.min]
+func CalculateProbabilities(params DiceRollParameters) *Probabilities {
+	if err := validateParameters(params); err != nil {
+		panic(err)
 	}
-	return 0
-}
-
-const MAX_DICE_COUNT = 64
-const MAX_DICE_SIDES = 32
-
-func CalculateProbabilities(schema DiceSchema) Probabilities {
-	if schema.Count < 1 || schema.Count > MAX_DICE_COUNT {
-		panic("bad count") // Or err?
-	}
-	if schema.Sides < 1 || schema.Sides > MAX_DICE_SIDES {
-		panic("bad sides") // Or err?
-	}
-	min := schema.Count
-	max := schema.Count * schema.Sides
+	min, max := getValueRange(params)
 	count := max - min + 1
 	slots := make([]int, count)
 	for i := 0; i < count; i++ {
 		slots[i] = calculateSlot(min+i, schema)
 	}
-	total := int(math.Pow(float64(schema.Sides), float64(schema.Count)))
-	return Probabilities{
+	return &Probabilities{
 		min:    min,
 		max:    max,
 		values: calculateValues(slots, total),
