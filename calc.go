@@ -1,5 +1,7 @@
 package dicecalc
 
+import "fmt"
+
 func CalculateProbabilities(params DiceRollParameters) (*Probabilities, error) {
 	if err := validateParameters(params); err != nil {
 		return nil, err
@@ -22,7 +24,7 @@ func CalculateProbabilities(params DiceRollParameters) (*Probabilities, error) {
 		values[i] = float64(valueCount) / float64(totalCount)
 	}
 	if checkCount != totalCount {
-		panic("no match!")
+		panic(fmt.Errorf("no match: expected %d, got %d", totalCount, checkCount))
 	}
 	return &Probabilities{
 		min:    min,
