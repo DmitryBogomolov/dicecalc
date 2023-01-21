@@ -8,15 +8,20 @@ import (
 	. "github.com/DmitryBogomolov/dicecalc"
 )
 
+func makeProbabilitiesList(probabilities *Probabilities) []float64 {
+	probs := make([]float64, probabilities.ValuesCount())
+	for i := range probs {
+		probs[i] = probabilities.ValueProbability(i + probabilities.MinValue())
+	}
+	return probs
+}
+
 func TestCalculateProbabilities(t *testing.T) {
 	probabilities, _ := CalculateProbabilities(DiceRollParameters{DiceCount: 3, DiceSides: 6})
 	assert.Equal(t, 3, probabilities.MinValue())
 	assert.Equal(t, 18, probabilities.MaxValue())
 	assert.Equal(t, 16, probabilities.ValuesCount())
-	probs := make([]float64, 16)
-	for i := range probs {
-		probs[i] = probabilities.ValueProbability(3 + i)
-	}
+	actual := makeProbabilitiesList(probabilities)
 	expected := []float64{
 		0.0046,
 		0.0139,
@@ -35,5 +40,5 @@ func TestCalculateProbabilities(t *testing.T) {
 		0.0139,
 		0.0046,
 	}
-	assert.InEpsilonSlice(t, expected, probs, 0.01)
+	assert.InEpsilonSlice(t, expected, actual, 0.01)
 }
