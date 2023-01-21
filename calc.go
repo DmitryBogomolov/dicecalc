@@ -15,11 +15,7 @@ func CalculateProbabilities(params DiceRollParameters) (*Probabilities, error) {
 	checkCount := 0
 	for i := 0; i < count; i++ {
 		rolls := collectAllRolls(i+min, params)
-		valueCount := 0
-		for _, roll := range rolls {
-			k := calculateRollCount(roll, factorials)
-			valueCount += k
-		}
+		valueCount := calculateValueSlots(rolls, factorials)
 		checkCount += valueCount
 		values[i] = float64(valueCount) / float64(totalCount)
 	}
@@ -31,6 +27,15 @@ func CalculateProbabilities(params DiceRollParameters) (*Probabilities, error) {
 		max:    max,
 		values: values,
 	}, nil
+}
+
+func calculateValueSlots(rolls []*_DiceRoll, factorials []int) int {
+	count := 0
+	for _, roll := range rolls {
+		k := calculateRollCount(roll, factorials)
+		count += k
+	}
+	return count
 }
 
 func calculateRollCount(roll *_DiceRoll, factorials []int) int {
