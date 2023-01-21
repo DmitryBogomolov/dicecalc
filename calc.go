@@ -10,6 +10,7 @@ func CalculateProbabilities(params DiceRollParameters) *Probabilities {
 	factorials := calculateFactorials(params.DiceCount)
 	count := max - min + 1
 	values := make([]float64, count)
+	checkCount := 0
 	for i := 0; i < count; i++ {
 		rolls := collectAllRolls(i+min, params)
 		valueCount := 0
@@ -17,7 +18,11 @@ func CalculateProbabilities(params DiceRollParameters) *Probabilities {
 			k := calculateRollCount(roll, factorials)
 			valueCount += k
 		}
+		checkCount += valueCount
 		values[i] = float64(valueCount) / float64(totalCount)
+	}
+	if checkCount != totalCount {
+		panic("no match!")
 	}
 	return &Probabilities{
 		min:    min,
