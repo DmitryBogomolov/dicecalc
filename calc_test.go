@@ -41,6 +41,30 @@ func TestCalculateProbabilities(t *testing.T) {
 	assert.Equal(t, 16, probabilities.ValuesCount())
 }
 
+func TestValidation(t *testing.T) {
+	{
+		probabilities, err := CalculateProbabilities(DiceRollParameters{DiceCount: 0, DiceSides: 4})
+		assert.Nil(t, probabilities)
+		assert.Error(t, err)
+	}
+	{
+		probabilities, err := CalculateProbabilities(DiceRollParameters{DiceCount: 3, DiceSides: 0})
+		assert.Nil(t, probabilities)
+		assert.Error(t, err)
+	}
+	{
+		probabilities, err := CalculateProbabilities(DiceRollParameters{DiceCount: MAX_DICE_COUNT + 1, DiceSides: 4})
+		assert.Nil(t, probabilities)
+		assert.Error(t, err)
+	}
+	{
+		probabilities, err := CalculateProbabilities(DiceRollParameters{DiceCount: 3, DiceSides: MAX_DICE_SIDES + 1})
+		assert.Nil(t, probabilities)
+		assert.Error(t, err)
+	}
+
+}
+
 func Test3dx(t *testing.T) {
 	checkProbabilities(t, "3d4", []float64{
 		0.0156,
