@@ -5,70 +5,45 @@ func CalculateProbabilities(params DiceRollParameters) *Probabilities {
 		panic(err)
 	}
 	min, max := getValueRange(params)
+	totalCount := getVariantsCount(params)
+	// TODO: Use precalculated metrics.
+	factorials := calculateFactorials(params.DiceCount)
 	count := max - min + 1
-	slots := make([]int, count)
+	values := make([]float64, count)
 	for i := 0; i < count; i++ {
-		slots[i] = calculateSlot(min+i, schema)
+		rolls := collectAllRolls(i+min, params)
+		valueCount := 0
+		for _, roll := range rolls {
+			k := calculateRollCount(roll, factorials)
+			valueCount += k
+		}
+		values[i] = float64(valueCount) / float64(totalCount)
 	}
 	return &Probabilities{
 		min:    min,
 		max:    max,
-		values: calculateValues(slots, total),
+		values: values,
 	}
 }
 
-func calculateFactorials(count int) []int {
-	values := make([]int, count)
+func calculateRollCount(roll *_DiceRoll, factorials []int) int {
+	n := len(roll.dices)
+	counts := make(map[byte]int)
+	for _, dice := range roll.dices {
+		counts[dice]++
+	}
+	ret := factorials[n-1]
+	for _, c := range counts {
+		ret /= factorials[c-1]
+	}
+	return ret
+}
+
+func calculateFactorials(length int) []int {
+	values := make([]int, length)
 	values[0] = 1
-	for i := 1; i < count; i++ {
+	for i := 1; i < length; i++ {
 		values[i] = values[i-1] * (i + 1)
-	}
-	return values
-}
-
-func initSlotDices(value int, schema DiceSchema) []int {
-	items := make([]int, schema.Count)
-	for i := range items {
-		items[i] = 1
-	}
-	rest := value - schema.Count
-	k := schema.Count - 1
-	for rest > 0 {
-		portion := schema.Sides - 1
-		if portion > rest {
-			portion = rest
-		}
-		rest -= portion
-		items[k] += portion
-		k--
-	}
-	return items
-}
-
-func calculateSlot(value int, schema DiceSchema) int {
-	initial := initSlotDices(value, schema)
-	for k := len(initial) - 1; k > 0; k-- {
-		copy := append([]int(nil), initial...)
-		for copy[k] > copy[k-1] {
-			sample := copy[k] - 1
-			for i := k - 1; i >= 0; i-- {
-			}
-		}
-	}
-	return 0
-}
-
-func calculateValues(slots []int, totalCount int) []float64 {
-	check := 0
-	for _, slot := range slots {
-		check += slot
-	}
-	if check != totalCount {
-		panic("check") // Or err?
-	}
-	values := make([]float64, len(slots))
-	for i, slot := range slots {
-		values[i] = float64(slot) / float64(totalCount)
 	}
 	return values
 }

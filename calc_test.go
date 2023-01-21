@@ -9,7 +9,7 @@ import (
 )
 
 func TestCalculateProbabilities(t *testing.T) {
-	probabilities := CalculateProbabilities(DiceSchema{Sides: 6, Count: 4})
-	assert.Equal(t, 4, probabilities.Min())
-	assert.Equal(t, 24, probabilities.Max())
+	probabilities := CalculateProbabilities(DiceRollParameters{DiceSides: 6, DiceCount: 4})
+	assert.Equal(t, 4, probabilities.MinValue())
+	assert.Equal(t, 24, probabilities.MaxValue())
 }
