@@ -1,8 +1,8 @@
 package dicecalc
 
-func CalculateProbabilities(params DiceRollParameters) *Probabilities {
+func CalculateProbabilities(params DiceRollParameters) (*Probabilities, error) {
 	if err := validateParameters(params); err != nil {
-		panic(err)
+		return nil, err
 	}
 	min, max := getValueRange(params)
 	totalCount := getVariantsCount(params)
@@ -28,7 +28,7 @@ func CalculateProbabilities(params DiceRollParameters) *Probabilities {
 		min:    min,
 		max:    max,
 		values: values,
-	}
+	}, nil
 }
 
 func calculateRollCount(roll *_DiceRoll, factorials []int) int {
