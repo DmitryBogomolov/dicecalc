@@ -27,13 +27,23 @@ func (diceRoll *_DiceRoll) key() string {
 	return string(diceRoll.dices)
 }
 
-func (diceRoll *_DiceRoll) getSimilarRoll(fromIdx, toIdx int) *_DiceRoll {
-	if diceRoll.dices[toIdx]+1 > diceRoll.dices[fromIdx]-1 {
-		return nil
+func (diceRoll *_DiceRoll) getSimilarRoll(srcIdx, dstIdx int) *_DiceRoll {
+	dices := diceRoll.dices
+	if dstIdx == srcIdx-1 {
+		if dices[srcIdx]-dices[dstIdx] < 2 {
+			return nil
+		}
+	} else {
+		if dices[srcIdx]-dices[srcIdx-1] < 1 {
+			return nil
+		}
+		if dices[dstIdx+1]-dices[dstIdx] < 1 {
+			return nil
+		}
 	}
-	dices := append([]byte(nil), diceRoll.dices...)
-	dices[fromIdx]--
-	dices[toIdx]++
+	dices = append([]byte(nil), dices...)
+	dices[srcIdx]--
+	dices[dstIdx]++
 	return &_DiceRoll{dices: dices}
 }
 
