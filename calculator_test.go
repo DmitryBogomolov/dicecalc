@@ -62,7 +62,6 @@ func TestValidation(t *testing.T) {
 		assert.Nil(t, probabilities)
 		assert.Error(t, err)
 	}
-
 }
 
 func Test3dx(t *testing.T) {
