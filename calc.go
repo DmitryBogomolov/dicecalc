@@ -8,8 +8,7 @@ func CalculateProbabilities(params DiceRollParameters) (*Probabilities, error) {
 	}
 	min, max := getValueRange(params)
 	totalCount := getVariantsCount(params)
-	// TODO: Use precalculated metrics.
-	factorials := calculateFactorials(params.DiceCount)
+	factorials := makeFactorials(params.DiceCount)
 	count := max - min + 1
 	values := make([]float64, count)
 	checkCount := 0
@@ -29,7 +28,7 @@ func CalculateProbabilities(params DiceRollParameters) (*Probabilities, error) {
 	}, nil
 }
 
-func calculateValueSlots(rolls []*_DiceRoll, factorials []int) int {
+func calculateValueSlots(rolls []*_DiceRoll, factorials *_Factorials) int {
 	count := 0
 	for _, roll := range rolls {
 		k := calculateRollCount(roll, factorials)
@@ -38,24 +37,15 @@ func calculateValueSlots(rolls []*_DiceRoll, factorials []int) int {
 	return count
 }
 
-func calculateRollCount(roll *_DiceRoll, factorials []int) int {
+func calculateRollCount(roll *_DiceRoll, factorials *_Factorials) int {
 	n := len(roll.dices)
 	counts := make(map[byte]int)
 	for _, dice := range roll.dices {
 		counts[dice]++
 	}
-	ret := factorials[n-1]
+	ret := factorials.get(n)
 	for _, c := range counts {
-		ret /= factorials[c-1]
+		ret /= factorials.get(c)
 	}
 	return ret
-}
-
-func calculateFactorials(length int) []int {
-	values := make([]int, length)
-	values[0] = 1
-	for i := 1; i < length; i++ {
-		values[i] = values[i-1] * (i + 1)
-	}
-	return values
 }
