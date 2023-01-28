@@ -11,14 +11,10 @@ func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabili
 	min, max := params.GetValueRange()
 	totalCount := params.GetVariantsCount()
 	factorials := makeFactorials(params.DiceCount)
-	count := max - min + 1
-	values := make([]int, count)
-	checkCount := 0
-	for i := 0; i < count; i++ {
+	values := make([]int, max-min+1)
+	for i := range values {
 		rolls := collectAllRolls(i+min, params)
-		valueCount := calculateValueSlots(rolls, factorials)
-		checkCount += valueCount
-		values[i] = valueCount
+		values[i] = calculateValueSlots(rolls, factorials)
 	}
 	return probabilities.NewProbabilities(min, max, totalCount, values)
 }
