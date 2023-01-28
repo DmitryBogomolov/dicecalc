@@ -2,7 +2,6 @@ package probabilities
 
 import (
 	"fmt"
-	"math"
 )
 
 type DiceRollParameters struct {
@@ -21,12 +20,4 @@ func (params DiceRollParameters) Validate() error {
 		return fmt.Errorf("bad dices: %d", params.DiceCount)
 	}
 	return nil
-}
-
-func (params DiceRollParameters) GetValueRange() (int, int) {
-	return params.DiceCount, params.DiceCount * params.DiceSides
-}
-
-func (params DiceRollParameters) GetVariantsCount() int {
-	return int(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
 }

@@ -1,6 +1,8 @@
 package dicecalc
 
 import (
+	"math"
+
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
@@ -8,8 +10,9 @@ func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabili
 	if err := params.Validate(); err != nil {
 		return nil, err
 	}
-	min, max := params.GetValueRange()
-	totalCount := params.GetVariantsCount()
+	min := params.DiceCount
+	max := params.DiceCount * params.DiceSides
+	totalCount := int(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
 	factorials := makeFactorials(params.DiceCount)
 	values := make([]int, max-min+1)
 	for i := range values {
