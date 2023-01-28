@@ -1,8 +1,6 @@
 package dicecalc
 
 import (
-	"fmt"
-
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
@@ -22,10 +20,7 @@ func CalculateProbabilities(params DiceRollParameters) (*probabilities.Probabili
 		checkCount += valueCount
 		values[i] = valueCount
 	}
-	if checkCount != totalCount {
-		panic(fmt.Errorf("no match: expected %d, got %d", totalCount, checkCount))
-	}
-	return probabilities.NewProbabilities(min, max, totalCount, values), nil
+	return probabilities.NewProbabilities(min, max, totalCount, values)
 }
 
 func calculateValueSlots(rolls []*_DiceRoll, factorials *_Factorials) int {

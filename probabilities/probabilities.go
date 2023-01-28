@@ -1,5 +1,7 @@
 package probabilities
 
+import "fmt"
+
 type Probabilities struct {
 	min   int
 	max   int
@@ -7,13 +9,26 @@ type Probabilities struct {
 	items []int
 }
 
-func NewProbabilities(min, max, total int, items []int) *Probabilities {
-	return &Probabilities{
-		min:   min,
-		max:   max,
-		total: total,
-		items: items,
+func NewProbabilities(minValue, maxValue, totalVariants int, valuesVariants []int) (*Probabilities, error) {
+	if minValue > maxValue {
+		return nil, fmt.Errorf("bad min value %d or max value %d", minValue, maxValue)
 	}
+	if len(valuesVariants) != maxValue-minValue+1 {
+		return nil, fmt.Errorf("bad variants %v (!= %d)", valuesVariants, maxValue-minValue+1)
+	}
+	check := 0
+	for _, valueVariants := range valuesVariants {
+		check += valueVariants
+	}
+	if check != totalVariants {
+		return nil, fmt.Errorf("bad total %d (!= %d)", totalVariants, check)
+	}
+	return &Probabilities{
+		min:   minValue,
+		max:   maxValue,
+		total: totalVariants,
+		items: valuesVariants,
+	}, nil
 }
 
 func (target *Probabilities) MinValue() int {
