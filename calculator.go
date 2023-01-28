@@ -1,8 +1,12 @@
 package dicecalc
 
-import "fmt"
+import (
+	"fmt"
 
-func CalculateProbabilities(params DiceRollParameters) (*Probabilities, error) {
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
+)
+
+func CalculateProbabilities(params DiceRollParameters) (*probabilities.Probabilities, error) {
 	if err := validateParameters(params); err != nil {
 		return nil, err
 	}
@@ -10,22 +14,18 @@ func CalculateProbabilities(params DiceRollParameters) (*Probabilities, error) {
 	totalCount := getVariantsCount(params)
 	factorials := makeFactorials(params.DiceCount)
 	count := max - min + 1
-	values := make([]float64, count)
+	values := make([]int, count)
 	checkCount := 0
 	for i := 0; i < count; i++ {
 		rolls := collectAllRolls(i+min, params)
 		valueCount := calculateValueSlots(rolls, factorials)
 		checkCount += valueCount
-		values[i] = float64(valueCount) / float64(totalCount)
+		values[i] = valueCount
 	}
 	if checkCount != totalCount {
 		panic(fmt.Errorf("no match: expected %d, got %d", totalCount, checkCount))
 	}
-	return &Probabilities{
-		min:    min,
-		max:    max,
-		values: values,
-	}, nil
+	return probabilities.NewProbabilities(min, max, totalCount, values), nil
 }
 
 func calculateValueSlots(rolls []*_DiceRoll, factorials *_Factorials) int {
