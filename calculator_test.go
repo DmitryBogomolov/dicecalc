@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	. "github.com/DmitryBogomolov/dicecalc"
+	. "github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
 func TestCalculateProbabilities(t *testing.T) {

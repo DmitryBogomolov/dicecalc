@@ -4,12 +4,12 @@ import (
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
-func CalculateProbabilities(params DiceRollParameters) (*probabilities.Probabilities, error) {
-	if err := validateParameters(params); err != nil {
+func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabilities.Probabilities, error) {
+	if err := params.Validate(); err != nil {
 		return nil, err
 	}
-	min, max := getValueRange(params)
-	totalCount := getVariantsCount(params)
+	min, max := params.GetValueRange()
+	totalCount := params.GetVariantsCount()
 	factorials := makeFactorials(params.DiceCount)
 	count := max - min + 1
 	values := make([]int, count)

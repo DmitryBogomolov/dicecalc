@@ -1,6 +1,8 @@
 package dicecalc
 
-func collectAllRolls(value int, params DiceRollParameters) []*_DiceRoll {
+import "github.com/DmitryBogomolov/dicecalc/probabilities"
+
+func collectAllRolls(value int, params probabilities.DiceRollParameters) []*_DiceRoll {
 	rootRoll := initDiceRoll(value, params)
 	index := make(map[string]*_DiceRoll)
 	collectAllRollsRecursive(rootRoll, index)
