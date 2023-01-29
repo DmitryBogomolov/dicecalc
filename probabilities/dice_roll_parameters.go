@@ -1,8 +1,7 @@
-package dicecalc
+package probabilities
 
 import (
 	"fmt"
-	"math"
 )
 
 type DiceRollParameters struct {
@@ -13,7 +12,7 @@ type DiceRollParameters struct {
 const MAX_DICE_COUNT = 64
 const MAX_DICE_SIDES = 32
 
-func validateParameters(params DiceRollParameters) error {
+func (params DiceRollParameters) Validate() error {
 	if params.DiceSides < 1 || params.DiceSides > MAX_DICE_SIDES {
 		return fmt.Errorf("bad sides: %d", params.DiceSides)
 	}
@@ -21,12 +20,4 @@ func validateParameters(params DiceRollParameters) error {
 		return fmt.Errorf("bad dices: %d", params.DiceCount)
 	}
 	return nil
-}
-
-func getValueRange(params DiceRollParameters) (int, int) {
-	return params.DiceCount, params.DiceCount * params.DiceSides
-}
-
-func getVariantsCount(params DiceRollParameters) int {
-	return int(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
 }

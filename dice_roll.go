@@ -1,10 +1,12 @@
 package dicecalc
 
+import "github.com/DmitryBogomolov/dicecalc/probabilities"
+
 type _DiceRoll struct {
 	dices []byte
 }
 
-func initDiceRoll(value int, params DiceRollParameters) *_DiceRoll {
+func initDiceRoll(value int, params probabilities.DiceRollParameters) *_DiceRoll {
 	dices := make([]byte, params.DiceCount)
 	for i := range dices {
 		dices[i] = 1

@@ -1,31 +1,25 @@
 package dicecalc
 
-import "fmt"
+import (
+	"math"
 
-func CalculateProbabilities(params DiceRollParameters) (*Probabilities, error) {
-	if err := validateParameters(params); err != nil {
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
+)
+
+func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabilities.Probabilities, error) {
+	if err := params.Validate(); err != nil {
 		return nil, err
 	}
-	min, max := getValueRange(params)
-	totalCount := getVariantsCount(params)
+	min := params.DiceCount
+	max := params.DiceCount * params.DiceSides
+	totalCount := int(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
 	factorials := makeFactorials(params.DiceCount)
-	count := max - min + 1
-	values := make([]float64, count)
-	checkCount := 0
-	for i := 0; i < count; i++ {
+	values := make([]int, max-min+1)
+	for i := range values {
 		rolls := collectAllRolls(i+min, params)
-		valueCount := calculateValueSlots(rolls, factorials)
-		checkCount += valueCount
-		values[i] = float64(valueCount) / float64(totalCount)
+		values[i] = calculateValueSlots(rolls, factorials)
 	}
-	if checkCount != totalCount {
-		panic(fmt.Errorf("no match: expected %d, got %d", totalCount, checkCount))
-	}
-	return &Probabilities{
-		min:    min,
-		max:    max,
-		values: values,
-	}, nil
+	return probabilities.NewProbabilities(min, max, totalCount, values)
 }
 
 func calculateValueSlots(rolls []*_DiceRoll, factorials *_Factorials) int {
