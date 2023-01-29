@@ -12,7 +12,7 @@ import (
 
 func TestVariant1(t *testing.T) {
 	start := time.Now()
-	dicecalc.CalculateProbabilities(probabilities.DiceRollParameters{DiceSides: 10, DiceCount: 10})
+	dicecalc.CalculateProbabilities(probabilities.DiceRollParameters{DiceSides: 12, DiceCount: 10})
 	end := time.Now()
 	delta := end.Sub(start).Seconds()
 	fmt.Println(delta)
@@ -20,8 +20,7 @@ func TestVariant1(t *testing.T) {
 
 func TestVariant2(t *testing.T) {
 	start := time.Now()
-	sum_dice.CalculateProbabilities(probabilities.DiceRollParameters{DiceSides: 10, DiceCount: 10})
-	sum_dice.CalculateProbabilities(probabilities.DiceRollParameters{DiceSides: 10, DiceCount: 10})
+	sum_dice.CalculateProbabilities(probabilities.DiceRollParameters{DiceSides: 12, DiceCount: 10})
 	end := time.Now()
 	delta := end.Sub(start).Seconds()
 	fmt.Println(delta)
