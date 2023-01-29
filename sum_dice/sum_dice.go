@@ -22,7 +22,7 @@ func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabili
 		values[i] = measureRolls(rolls, factorials)
 		rolls = getNextRolls(rolls, params.DiceSides)
 	}
-	for i := half; i < len; i++ {
+	for i := half + 1; i < len; i++ {
 		values[i] = values[len-1-i]
 	}
 	return probabilities.NewProbabilities(min, max, totalCount, values)

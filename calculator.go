@@ -14,10 +14,15 @@ func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabili
 	max := params.DiceCount * params.DiceSides
 	totalCount := int(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
 	factorials := makeFactorials(params.DiceCount)
-	values := make([]int, max-min+1)
-	for i := range values {
+	len := max - min + 1
+	values := make([]int, len)
+	half := len >> 1
+	for i := 0; i <= half; i++ {
 		rolls := collectAllRolls(i+min, params)
 		values[i] = calculateValueSlots(rolls, factorials)
+	}
+	for i := half + 1; i < len; i++ {
+		values[i] = values[len-1-i]
 	}
 	return probabilities.NewProbabilities(min, max, totalCount, values)
 }
