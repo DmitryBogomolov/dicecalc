@@ -3,6 +3,7 @@ package dicecalc
 import (
 	"math"
 
+	"github.com/DmitryBogomolov/dicecalc/factorials"
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
@@ -13,7 +14,7 @@ func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabili
 	min := params.DiceCount
 	max := params.DiceCount * params.DiceSides
 	totalCount := int(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
-	factorials := makeFactorials(params.DiceCount)
+	factorials := factorials.New(params.DiceCount)
 	len := max - min + 1
 	values := make([]int, len)
 	half := len >> 1
@@ -28,7 +29,7 @@ func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabili
 	return probabilities.NewProbabilities(min, max, totalCount, values)
 }
 
-func calculateValueSlots(rolls []*_DiceRoll, factorials *_Factorials) int {
+func calculateValueSlots(rolls []*_DiceRoll, factorials *factorials.Factorials) int {
 	count := 0
 	for _, roll := range rolls {
 		k := calculateRollCount(roll, factorials)
@@ -37,15 +38,15 @@ func calculateValueSlots(rolls []*_DiceRoll, factorials *_Factorials) int {
 	return count
 }
 
-func calculateRollCount(roll *_DiceRoll, factorials *_Factorials) int {
+func calculateRollCount(roll *_DiceRoll, factorials *factorials.Factorials) int {
 	n := len(roll.dices)
 	counts := make(map[byte]int)
 	for _, dice := range roll.dices {
 		counts[dice]++
 	}
-	ret := factorials.get(n)
+	ret := factorials.Get(n)
 	for _, c := range counts {
-		ret /= factorials.get(c)
+		ret /= factorials.Get(c)
 	}
 	return ret
 }

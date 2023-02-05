@@ -3,6 +3,7 @@ package sum_dice
 import (
 	"math"
 
+	"github.com/DmitryBogomolov/dicecalc/factorials"
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
@@ -12,7 +13,7 @@ func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabili
 	}
 	min := params.DiceCount
 	max := params.DiceCount * params.DiceSides
-	factorials := makeFactorials(params.DiceCount)
+	factorials := factorials.New(params.DiceCount)
 	totalCount := int(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
 	len := max - min + 1
 	values := make([]int, len)
@@ -38,20 +39,20 @@ func makeInitialRolls(diceCount int) []*_Roll {
 	}
 }
 
-func measureRoll(roll *_Roll, factorials *_Factorials) int {
+func measureRoll(roll *_Roll, factorials *factorials.Factorials) int {
 	n := len(roll.dices)
 	counts := make(map[byte]int)
 	for _, dice := range roll.dices {
 		counts[dice]++
 	}
-	ret := factorials.get(n)
+	ret := factorials.Get(n)
 	for _, c := range counts {
-		ret /= factorials.get(c)
+		ret /= factorials.Get(c)
 	}
 	return ret
 }
 
-func measureRolls(rolls []*_Roll, factorials *_Factorials) int {
+func measureRolls(rolls []*_Roll, factorials *factorials.Factorials) int {
 	count := 0
 	for _, roll := range rolls {
 		k := measureRoll(roll, factorials)
