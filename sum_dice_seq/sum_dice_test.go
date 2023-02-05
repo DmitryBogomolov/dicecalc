@@ -1,4 +1,4 @@
-package sum_dice_test
+package sum_dice_seq_test
 
 import (
 	"strconv"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	. "github.com/DmitryBogomolov/dicecalc/probabilities"
-	. "github.com/DmitryBogomolov/dicecalc/sum_dice"
+	. "github.com/DmitryBogomolov/dicecalc/sum_dice_seq"
 	"github.com/DmitryBogomolov/dicecalc/test_helper"
 )
 

@@ -1,4 +1,4 @@
-package sum_dice
+package sum_dice_seq
 
 import (
 	"math"

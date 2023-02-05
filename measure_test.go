@@ -7,7 +7,7 @@ import (
 
 	"github.com/DmitryBogomolov/dicecalc"
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
-	"github.com/DmitryBogomolov/dicecalc/sum_dice"
+	"github.com/DmitryBogomolov/dicecalc/sum_dice_seq"
 )
 
 func TestVariant1(t *testing.T) {
@@ -20,7 +20,7 @@ func TestVariant1(t *testing.T) {
 
 func TestVariant2(t *testing.T) {
 	start := time.Now()
-	sum_dice.CalculateProbabilities(probabilities.DiceRollParameters{DiceSides: 12, DiceCount: 10})
+	sum_dice_seq.CalculateProbabilities(probabilities.DiceRollParameters{DiceSides: 12, DiceCount: 10})
 	end := time.Now()
 	delta := end.Sub(start).Seconds()
 	fmt.Println(delta)
