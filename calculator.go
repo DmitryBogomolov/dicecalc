@@ -2,7 +2,6 @@ package dicecalc
 
 import (
 	"math"
-	"sync"
 
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
@@ -18,16 +17,11 @@ func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabili
 	len := max - min + 1
 	values := make([]int, len)
 	half := len >> 1
-	var wg sync.WaitGroup
 	for i := 0; i <= half; i++ {
-		wg.Add(1)
-		go func(k int) {
-			rolls := collectAllRolls(k+min, params)
-			values[k] = calculateValueSlots(rolls, factorials)
-			wg.Done()
-		}(i)
+		k := i
+		rolls := collectAllRolls(k+min, params)
+		values[k] = calculateValueSlots(rolls, factorials)
 	}
-	wg.Wait()
 	for i := half + 1; i < len; i++ {
 		values[i] = values[len-1-i]
 	}
