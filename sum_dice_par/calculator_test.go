@@ -1,4 +1,4 @@
-package dicecalc_test
+package sum_dice_par_test
 
 import (
 	"strconv"
@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	. "github.com/DmitryBogomolov/dicecalc"
 	. "github.com/DmitryBogomolov/dicecalc/probabilities"
+	. "github.com/DmitryBogomolov/dicecalc/sum_dice_par"
 	"github.com/DmitryBogomolov/dicecalc/test_helper"
 )
 

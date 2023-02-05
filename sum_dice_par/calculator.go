@@ -1,4 +1,4 @@
-package dicecalc
+package sum_dice_par
 
 import (
 	"math"
