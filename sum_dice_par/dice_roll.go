@@ -18,10 +18,6 @@ func initDiceRoll(value int, roller *dice_roller.DiceRoller) dice_roller.DiceRol
 	return dices
 }
 
-func rollKey(roll dice_roller.DiceRoll) string {
-	return string(roll)
-}
-
 func getSimilarRoll(roller *dice_roller.DiceRoller, roll dice_roller.DiceRoll, srcIdx, dstIdx int) dice_roller.DiceRoll {
 	if dstIdx == srcIdx-1 {
 		if (roll[srcIdx] - roll[dstIdx]) < 2 {
