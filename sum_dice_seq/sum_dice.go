@@ -1,8 +1,6 @@
 package sum_dice_seq
 
 import (
-	"math"
-
 	"github.com/DmitryBogomolov/dicecalc/dice_roller"
 )
 
@@ -13,35 +11,31 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 	min := params.DiceCount
 	max := params.DiceCount * params.DiceSides
 	factorials := dice_roller.NewFactorials(params.DiceCount)
-	totalCount := int(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
 	len := max - min + 1
 	values := make([]int, len)
-	rolls := makeInitialRolls(params.DiceCount)
+	roller := dice_roller.NewRoller(params)
+	rolls := makeInitialRolls(roller)
 	half := len >> 1
 	for i := 0; i <= half; i++ {
 		values[i] = measureRolls(rolls, factorials)
-		rolls = getNextRolls(rolls, params.DiceSides)
+		rolls = getNextRolls(rolls, roller)
 	}
 	for i := half + 1; i < len; i++ {
-		values[i] = values[len-1-i]
+		values[i] = values[(len - 1 - i)]
 	}
-	return dice_roller.NewProbabilities(min, max, totalCount, values)
+	return dice_roller.NewProbabilities(min, max, roller.TotalRolls(), values)
 }
 
-func makeInitialRolls(diceCount int) []*_Roll {
-	dices := make([]byte, diceCount)
-	for i := range dices {
-		dices[i] = 1
-	}
-	return []*_Roll{
-		{dices: dices},
+func makeInitialRolls(roller *dice_roller.DiceRoller) []dice_roller.DiceRoll {
+	return []dice_roller.DiceRoll{
+		roller.IdxToRoll(0),
 	}
 }
 
-func measureRoll(roll *_Roll, factorials *dice_roller.Factorials) int {
-	n := len(roll.dices)
+func measureRoll(roll dice_roller.DiceRoll, factorials *dice_roller.Factorials) int {
+	n := len(roll)
 	counts := make(map[byte]int)
-	for _, dice := range roll.dices {
+	for _, dice := range roll {
 		counts[dice]++
 	}
 	ret := factorials.Get(n)
@@ -51,7 +45,7 @@ func measureRoll(roll *_Roll, factorials *dice_roller.Factorials) int {
 	return ret
 }
 
-func measureRolls(rolls []*_Roll, factorials *dice_roller.Factorials) int {
+func measureRolls(rolls []dice_roller.DiceRoll, factorials *dice_roller.Factorials) int {
 	count := 0
 	for _, roll := range rolls {
 		k := measureRoll(roll, factorials)
@@ -60,28 +54,26 @@ func measureRolls(rolls []*_Roll, factorials *dice_roller.Factorials) int {
 	return count
 }
 
-func getNextRollsForRoll(roll *_Roll, diceSides int) []*_Roll {
-	var rolls []*_Roll
-	dices := roll.dices
-	for i := 0; i < len(dices); i++ {
-		next := dices[i] + 1
-		if next <= byte(diceSides) && (i == len(dices)-1 || next <= dices[i+1]) {
-			nextDices := append([]byte(nil), dices...)
-			nextDices[i] = next
-			roll := &_Roll{dices: nextDices}
-			rolls = append(rolls, roll)
+func getNextRollsForRoll(roll dice_roller.DiceRoll, roller *dice_roller.DiceRoller) []dice_roller.DiceRoll {
+	var rolls []dice_roller.DiceRoll
+	for i := 0; i < len(roll); i++ {
+		next := roll[i] + 1
+		if roller.IsValidDice(next) && (i == len(roll)-1 || next <= roll[i+1]) {
+			nextRoll := roller.CloneRoll(roll)
+			nextRoll[i] = next
+			rolls = append(rolls, nextRoll)
 		}
 	}
 	return rolls
 }
 
-func getNextRolls(rolls []*_Roll, diceSides int) []*_Roll {
-	var result []*_Roll
+func getNextRolls(rolls []dice_roller.DiceRoll, roller *dice_roller.DiceRoller) []dice_roller.DiceRoll {
+	var result []dice_roller.DiceRoll
 	index := map[string]int{}
 	for _, roll := range rolls {
-		list := getNextRollsForRoll(roll, diceSides)
+		list := getNextRollsForRoll(roll, roller)
 		for _, candidate := range list {
-			key := candidate.key()
+			key := rollKey(candidate)
 			if _, has := index[key]; !has {
 				index[key] = 1
 				result = append(result, candidate)
@@ -91,10 +83,6 @@ func getNextRolls(rolls []*_Roll, diceSides int) []*_Roll {
 	return result
 }
 
-type _Roll struct {
-	dices []byte
-}
-
-func (roll *_Roll) key() string {
-	return string(roll.dices)
+func rollKey(roll dice_roller.DiceRoll) string {
+	return string(roll)
 }

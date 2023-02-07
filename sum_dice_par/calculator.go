@@ -1,8 +1,6 @@
 package sum_dice_par
 
 import (
-	"math"
-
 	"github.com/DmitryBogomolov/dicecalc/dice_roller"
 )
 
@@ -12,23 +10,23 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 	}
 	min := params.DiceCount
 	max := params.DiceCount * params.DiceSides
-	totalCount := int(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
+	roller := dice_roller.NewRoller(params)
 	factorials := dice_roller.NewFactorials(params.DiceCount)
 	len := max - min + 1
 	values := make([]int, len)
 	half := len >> 1
 	for i := 0; i <= half; i++ {
 		k := i
-		rolls := collectAllRolls(k+min, params)
+		rolls := collectAllRolls(k+min, roller)
 		values[k] = calculateValueSlots(rolls, factorials)
 	}
 	for i := half + 1; i < len; i++ {
-		values[i] = values[len-1-i]
+		values[i] = values[(len - 1 - i)]
 	}
-	return dice_roller.NewProbabilities(min, max, totalCount, values)
+	return dice_roller.NewProbabilities(min, max, roller.TotalRolls(), values)
 }
 
-func calculateValueSlots(rolls []*_DiceRoll, factorials *dice_roller.Factorials) int {
+func calculateValueSlots(rolls []dice_roller.DiceRoll, factorials *dice_roller.Factorials) int {
 	count := 0
 	for _, roll := range rolls {
 		k := calculateRollCount(roll, factorials)
@@ -37,10 +35,10 @@ func calculateValueSlots(rolls []*_DiceRoll, factorials *dice_roller.Factorials)
 	return count
 }
 
-func calculateRollCount(roll *_DiceRoll, factorials *dice_roller.Factorials) int {
-	n := len(roll.dices)
+func calculateRollCount(roll dice_roller.DiceRoll, factorials *dice_roller.Factorials) int {
+	n := len(roll)
 	counts := make(map[byte]int)
-	for _, dice := range roll.dices {
+	for _, dice := range roll {
 		counts[dice]++
 	}
 	ret := factorials.Get(n)

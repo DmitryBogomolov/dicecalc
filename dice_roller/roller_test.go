@@ -9,13 +9,13 @@ import (
 
 func TestDiceRoller_GetRollFromIdx(t *testing.T) {
 	roller := NewRoller(DiceRollParameters{DiceCount: 3, DiceSides: 6})
-	assert.Equal(t, 0, roller.GetRollIdx([]byte{1, 1, 1}))
-	assert.Equal(t, 1, roller.GetRollIdx([]byte{1, 1, 2}))
-	assert.Equal(t, 5, roller.GetRollIdx([]byte{1, 1, 6}))
-	assert.Equal(t, 6, roller.GetRollIdx([]byte{1, 2, 1}))
-	assert.Equal(t, 12, roller.GetRollIdx([]byte{1, 3, 1}))
-	assert.Equal(t, 179, roller.GetRollIdx([]byte{5, 6, 6}))
-	assert.Equal(t, 215, roller.GetRollIdx([]byte{6, 6, 6}))
+	assert.Equal(t, 0, roller.GetRollIdx(DiceRoll{1, 1, 1}))
+	assert.Equal(t, 1, roller.GetRollIdx(DiceRoll{1, 1, 2}))
+	assert.Equal(t, 5, roller.GetRollIdx(DiceRoll{1, 1, 6}))
+	assert.Equal(t, 6, roller.GetRollIdx(DiceRoll{1, 2, 1}))
+	assert.Equal(t, 12, roller.GetRollIdx(DiceRoll{1, 3, 1}))
+	assert.Equal(t, 179, roller.GetRollIdx(DiceRoll{5, 6, 6}))
+	assert.Equal(t, 215, roller.GetRollIdx(DiceRoll{6, 6, 6}))
 }
 
 func TestDiceRoller_IdxToRoll(t *testing.T) {

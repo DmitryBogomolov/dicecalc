@@ -2,22 +2,22 @@ package sum_dice_par
 
 import "github.com/DmitryBogomolov/dicecalc/dice_roller"
 
-func collectAllRolls(value int, params dice_roller.DiceRollParameters) []*_DiceRoll {
-	rootRoll := initDiceRoll(value, params)
-	index := make(map[string]*_DiceRoll)
-	collectAllRollsRecursive(rootRoll, index)
-	var rolls []*_DiceRoll
+func collectAllRolls(value int, roller *dice_roller.DiceRoller) []dice_roller.DiceRoll {
+	rootRoll := initDiceRoll(value, roller)
+	index := make(map[string]dice_roller.DiceRoll)
+	collectAllRollsRecursive(roller, rootRoll, index)
+	var rolls []dice_roller.DiceRoll
 	for _, roll := range index {
 		rolls = append(rolls, roll)
 	}
 	return rolls
 }
 
-func collectAllRollsRecursive(roll *_DiceRoll, index map[string]*_DiceRoll) {
-	index[roll.key()] = roll
-	for _, r := range roll.getAllSimilarRolls() {
-		if _, has := index[r.key()]; !has {
-			collectAllRollsRecursive(r, index)
+func collectAllRollsRecursive(roller *dice_roller.DiceRoller, roll dice_roller.DiceRoll, index map[string]dice_roller.DiceRoll) {
+	index[rollKey(roll)] = roll
+	for _, r := range getAllSimilarRolls(roller, roll) {
+		if _, has := index[rollKey(r)]; !has {
+			collectAllRollsRecursive(roller, r, index)
 		}
 	}
 }

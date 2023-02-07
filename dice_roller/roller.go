@@ -3,19 +3,31 @@ package dice_roller
 import "math"
 
 type DiceRoller struct {
-	diceCount int
-	diceSides int
-	total     int
+	diceCount  int
+	diceSides  int
+	totalRolls int
 }
 
 type DiceRoll []byte
 
 func NewRoller(params DiceRollParameters) *DiceRoller {
 	return &DiceRoller{
-		diceCount: params.DiceCount,
-		diceSides: params.DiceSides,
-		total:     int(math.Pow(float64(params.DiceSides), float64(params.DiceCount))),
+		diceCount:  params.DiceCount,
+		diceSides:  params.DiceSides,
+		totalRolls: int(math.Pow(float64(params.DiceSides), float64(params.DiceCount))),
 	}
+}
+
+func (roller *DiceRoller) DiceCount() int {
+	return roller.diceCount
+}
+
+func (roller *DiceRoller) DiceSides() int {
+	return roller.diceSides
+}
+
+func (roller *DiceRoller) TotalRolls() int {
+	return roller.totalRolls
 }
 
 func (roller *DiceRoller) GetRollIdx(roll DiceRoll) int {
@@ -28,7 +40,7 @@ func (roller *DiceRoller) GetRollIdx(roll DiceRoll) int {
 
 func (roller *DiceRoller) IdxToRoll(idx int) DiceRoll {
 	dices := make(DiceRoll, roller.diceCount)
-	divisor := roller.total
+	divisor := roller.totalRolls
 	residue := idx
 	for i := 0; i < roller.diceCount; i++ {
 		divisor /= roller.diceSides
@@ -40,4 +52,8 @@ func (roller *DiceRoller) IdxToRoll(idx int) DiceRoll {
 
 func (roller *DiceRoller) CloneRoll(roll DiceRoll) DiceRoll {
 	return append(DiceRoll(nil), roll...)
+}
+
+func (roller *DiceRoller) IsValidDice(dice byte) bool {
+	return 1 <= dice && dice <= byte(roller.diceSides)
 }

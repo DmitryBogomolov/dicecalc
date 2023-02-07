@@ -2,19 +2,12 @@ package sum_dice_par
 
 import "github.com/DmitryBogomolov/dicecalc/dice_roller"
 
-type _DiceRoll struct {
-	dices []byte
-}
-
-func initDiceRoll(value int, params dice_roller.DiceRollParameters) *_DiceRoll {
-	dices := make([]byte, params.DiceCount)
-	for i := range dices {
-		dices[i] = 1
-	}
+func initDiceRoll(value int, roller *dice_roller.DiceRoller) dice_roller.DiceRoll {
+	dices := roller.IdxToRoll(0)
 	rest := byte(value - len(dices))
 	k := len(dices) - 1
 	for rest > 0 {
-		val := byte(params.DiceSides - 1)
+		val := byte(roller.DiceSides() - 1)
 		if rest < val {
 			val = rest
 		}
@@ -22,38 +15,37 @@ func initDiceRoll(value int, params dice_roller.DiceRollParameters) *_DiceRoll {
 		dices[k] += val
 		k--
 	}
-	return &_DiceRoll{dices: dices}
+	return dices
 }
 
-func (diceRoll *_DiceRoll) key() string {
-	return string(diceRoll.dices)
+func rollKey(roll dice_roller.DiceRoll) string {
+	return string(roll)
 }
 
-func (diceRoll *_DiceRoll) getSimilarRoll(srcIdx, dstIdx int) *_DiceRoll {
-	dices := diceRoll.dices
+func getSimilarRoll(roller *dice_roller.DiceRoller, roll dice_roller.DiceRoll, srcIdx, dstIdx int) dice_roller.DiceRoll {
 	if dstIdx == srcIdx-1 {
-		if dices[srcIdx]-dices[dstIdx] < 2 {
+		if (roll[srcIdx] - roll[dstIdx]) < 2 {
 			return nil
 		}
 	} else {
-		if dices[srcIdx]-dices[srcIdx-1] < 1 {
+		if (roll[srcIdx] - roll[srcIdx-1]) < 1 {
 			return nil
 		}
-		if dices[dstIdx+1]-dices[dstIdx] < 1 {
+		if (roll[dstIdx+1] - roll[dstIdx]) < 1 {
 			return nil
 		}
 	}
-	dices = append([]byte(nil), dices...)
-	dices[srcIdx]--
-	dices[dstIdx]++
-	return &_DiceRoll{dices: dices}
+	newRoll := roller.CloneRoll(roll)
+	newRoll[srcIdx]--
+	newRoll[dstIdx]++
+	return newRoll
 }
 
-func (diceRoll *_DiceRoll) getAllSimilarRolls() []*_DiceRoll {
-	var rolls []*_DiceRoll
-	for i := len(diceRoll.dices) - 1; i > 0; i-- {
+func getAllSimilarRolls(roller *dice_roller.DiceRoller, roll dice_roller.DiceRoll) []dice_roller.DiceRoll {
+	var rolls []dice_roller.DiceRoll
+	for i := len(roll) - 1; i > 0; i-- {
 		for j := i - 1; j >= 0; j-- {
-			if roll := diceRoll.getSimilarRoll(i, j); roll != nil {
+			if roll := getSimilarRoll(roller, roll, i, j); roll != nil {
 				rolls = append(rolls, roll)
 			}
 		}
