@@ -4,7 +4,6 @@ import (
 	"math"
 
 	"github.com/DmitryBogomolov/dicecalc/dice_roller"
-	"github.com/DmitryBogomolov/dicecalc/factorials"
 )
 
 func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller.Probabilities, error) {
@@ -13,7 +12,7 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 	}
 	min := params.DiceCount
 	max := params.DiceCount * params.DiceSides
-	factorials := factorials.New(params.DiceCount)
+	factorials := dice_roller.NewFactorials(params.DiceCount)
 	totalCount := int(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
 	len := max - min + 1
 	values := make([]int, len)
@@ -39,7 +38,7 @@ func makeInitialRolls(diceCount int) []*_Roll {
 	}
 }
 
-func measureRoll(roll *_Roll, factorials *factorials.Factorials) int {
+func measureRoll(roll *_Roll, factorials *dice_roller.Factorials) int {
 	n := len(roll.dices)
 	counts := make(map[byte]int)
 	for _, dice := range roll.dices {
@@ -52,7 +51,7 @@ func measureRoll(roll *_Roll, factorials *factorials.Factorials) int {
 	return ret
 }
 
-func measureRolls(rolls []*_Roll, factorials *factorials.Factorials) int {
+func measureRolls(rolls []*_Roll, factorials *dice_roller.Factorials) int {
 	count := 0
 	for _, roll := range rolls {
 		k := measureRoll(roll, factorials)

@@ -1,10 +1,10 @@
-package factorials
+package dice_roller
 
 type Factorials struct {
 	values []int
 }
 
-func New(length int) *Factorials {
+func NewFactorials(length int) *Factorials {
 	values := make([]int, length)
 	values[0] = 1
 	for i := 1; i < length; i++ {
