@@ -8,7 +8,7 @@ type DiceRoller struct {
 	totalRolls int
 }
 
-type DiceRoll []byte
+type DiceRoll []int
 
 func NewRoller(params DiceRollParameters) *DiceRoller {
 	return &DiceRoller{
@@ -44,7 +44,7 @@ func (roller *DiceRoller) IdxToRoll(idx int) DiceRoll {
 	residue := idx
 	for i := 0; i < roller.diceCount; i++ {
 		divisor /= roller.diceSides
-		dices[i] = byte(residue/divisor) + 1
+		dices[i] = (residue / divisor) + 1
 		residue %= divisor
 	}
 	return dices
@@ -54,6 +54,6 @@ func (roller *DiceRoller) CloneRoll(roll DiceRoll) DiceRoll {
 	return append(DiceRoll(nil), roll...)
 }
 
-func (roller *DiceRoller) IsValidDice(dice byte) bool {
-	return 1 <= dice && dice <= byte(roller.diceSides)
+func (roller *DiceRoller) IsValidDice(dice int) bool {
+	return 1 <= dice && dice <= roller.diceSides
 }

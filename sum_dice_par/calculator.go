@@ -37,7 +37,7 @@ func calculateValueSlots(rolls []dice_roller.DiceRoll, factorials *dice_roller.F
 
 func calculateRollCount(roll dice_roller.DiceRoll, factorials *dice_roller.Factorials) int {
 	n := len(roll)
-	counts := make(map[byte]int)
+	counts := make(map[int]int)
 	for _, dice := range roll {
 		counts[dice]++
 	}

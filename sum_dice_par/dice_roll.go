@@ -4,10 +4,10 @@ import "github.com/DmitryBogomolov/dicecalc/dice_roller"
 
 func initDiceRoll(value int, roller *dice_roller.DiceRoller) dice_roller.DiceRoll {
 	dices := roller.IdxToRoll(0)
-	rest := byte(value - len(dices))
+	rest := value - len(dices)
 	k := len(dices) - 1
 	for rest > 0 {
-		val := byte(roller.DiceSides() - 1)
+		val := roller.DiceSides() - 1
 		if rest < val {
 			val = rest
 		}

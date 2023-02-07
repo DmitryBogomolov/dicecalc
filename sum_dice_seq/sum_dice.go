@@ -34,7 +34,7 @@ func makeInitialRolls(roller *dice_roller.DiceRoller) []dice_roller.DiceRoll {
 
 func measureRoll(roll dice_roller.DiceRoll, factorials *dice_roller.Factorials) int {
 	n := len(roll)
-	counts := make(map[byte]int)
+	counts := make(map[int]int)
 	for _, dice := range roll {
 		counts[dice]++
 	}
