@@ -11,7 +11,7 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 	min := params.DiceCount
 	max := params.DiceCount * params.DiceSides
 	roller := dice_roller.NewRoller(params)
-	factorials := dice_roller.NewFactorials(params.DiceCount)
+	factorials := dice_roller.CalculateFactorials(params.DiceCount)
 	len := max - min + 1
 	values := make([]int, len)
 	half := len >> 1
@@ -26,7 +26,7 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 	return dice_roller.NewProbabilities(min, max, roller.TotalRolls(), values)
 }
 
-func calculateValueSlots(rolls []dice_roller.DiceRoll, factorials *dice_roller.Factorials) int {
+func calculateValueSlots(rolls []dice_roller.DiceRoll, factorials dice_roller.Factorials) int {
 	count := 0
 	for _, roll := range rolls {
 		k := calculateRollCount(roll, factorials)
@@ -35,15 +35,15 @@ func calculateValueSlots(rolls []dice_roller.DiceRoll, factorials *dice_roller.F
 	return count
 }
 
-func calculateRollCount(roll dice_roller.DiceRoll, factorials *dice_roller.Factorials) int {
+func calculateRollCount(roll dice_roller.DiceRoll, factorials dice_roller.Factorials) int {
 	n := len(roll)
 	counts := make(map[int]int)
 	for _, dice := range roll {
 		counts[dice]++
 	}
-	ret := factorials.Get(n)
+	ret := factorials(n)
 	for _, c := range counts {
-		ret /= factorials.Get(c)
+		ret /= factorials(c)
 	}
 	return ret
 }
