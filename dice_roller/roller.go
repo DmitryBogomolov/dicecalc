@@ -53,7 +53,3 @@ func (roller *DiceRoller) IdxToRoll(idx int) DiceRoll {
 func (roller *DiceRoller) CloneRoll(roll DiceRoll) DiceRoll {
 	return append(DiceRoll(nil), roll...)
 }
-
-func (roller *DiceRoller) IsValidDice(dice int) bool {
-	return 1 <= dice && dice <= roller.diceSides
-}

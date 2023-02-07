@@ -14,7 +14,7 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 	len := max - min + 1
 	values := make([]int, len)
 	roller := dice_roller.NewRoller(params)
-	rolls := makeInitialRolls(roller)
+	rolls := []dice_roller.DiceRoll{roller.IdxToRoll(0)}
 	half := len >> 1
 	for i := 0; i <= half; i++ {
 		values[i] = measureRolls(rolls, factorials)
@@ -24,12 +24,6 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 		values[i] = values[(len - 1 - i)]
 	}
 	return dice_roller.NewProbabilities(min, max, roller.TotalRolls(), values)
-}
-
-func makeInitialRolls(roller *dice_roller.DiceRoller) []dice_roller.DiceRoll {
-	return []dice_roller.DiceRoll{
-		roller.IdxToRoll(0),
-	}
 }
 
 func measureRoll(roll dice_roller.DiceRoll, factorials *dice_roller.Factorials) int {
@@ -58,7 +52,11 @@ func getNextRollsForRoll(roll dice_roller.DiceRoll, roller *dice_roller.DiceRoll
 	var rolls []dice_roller.DiceRoll
 	for i := 0; i < len(roll); i++ {
 		next := roll[i] + 1
-		if roller.IsValidDice(next) && (i == len(roll)-1 || next <= roll[i+1]) {
+		threshold := roller.DiceSides()
+		if i < (len(roll) - 1) {
+			threshold = roll[(i + 1)]
+		}
+		if next <= threshold {
 			nextRoll := roller.CloneRoll(roll)
 			nextRoll[i] = next
 			rolls = append(rolls, nextRoll)
