@@ -3,19 +3,19 @@ package sum_dice_par
 import "github.com/DmitryBogomolov/dicecalc/dice_roller"
 
 func initDiceRoll(value int, roller *dice_roller.DiceRoller) dice_roller.DiceRoll {
-	dices := roller.IdxToRoll(0)
-	rest := value - len(dices)
-	k := len(dices) - 1
+	roll := roller.IdxToRoll(0)
+	rest := value - len(roll)
+	k := len(roll) - 1
 	for rest > 0 {
 		val := roller.DiceSides() - 1
 		if rest < val {
 			val = rest
 		}
 		rest -= val
-		dices[k] += val
+		roll[k] += val
 		k--
 	}
-	return dices
+	return roll
 }
 
 func getSimilarRoll(roller *dice_roller.DiceRoller, roll dice_roller.DiceRoll, srcIdx, dstIdx int) dice_roller.DiceRoll {
