@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	. "github.com/DmitryBogomolov/dicecalc/probabilities"
+	. "github.com/DmitryBogomolov/dicecalc/dice_roller"
 	. "github.com/DmitryBogomolov/dicecalc/sum_dice_seq"
 	"github.com/DmitryBogomolov/dicecalc/test_helper"
 )

@@ -1,8 +1,8 @@
 package sum_dice_par
 
-import "github.com/DmitryBogomolov/dicecalc/probabilities"
+import "github.com/DmitryBogomolov/dicecalc/dice_roller"
 
-func collectAllRolls(value int, params probabilities.DiceRollParameters) []*_DiceRoll {
+func collectAllRolls(value int, params dice_roller.DiceRollParameters) []*_DiceRoll {
 	rootRoll := initDiceRoll(value, params)
 	index := make(map[string]*_DiceRoll)
 	collectAllRollsRecursive(rootRoll, index)

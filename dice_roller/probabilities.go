@@ -1,4 +1,4 @@
-package probabilities
+package dice_roller
 
 import "fmt"
 

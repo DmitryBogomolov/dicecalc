@@ -1,12 +1,12 @@
 package sum_dice_par
 
-import "github.com/DmitryBogomolov/dicecalc/probabilities"
+import "github.com/DmitryBogomolov/dicecalc/dice_roller"
 
 type _DiceRoll struct {
 	dices []byte
 }
 
-func initDiceRoll(value int, params probabilities.DiceRollParameters) *_DiceRoll {
+func initDiceRoll(value int, params dice_roller.DiceRollParameters) *_DiceRoll {
 	dices := make([]byte, params.DiceCount)
 	for i := range dices {
 		dices[i] = 1

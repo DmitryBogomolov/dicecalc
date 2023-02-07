@@ -3,11 +3,11 @@ package sum_dice_par
 import (
 	"math"
 
+	"github.com/DmitryBogomolov/dicecalc/dice_roller"
 	"github.com/DmitryBogomolov/dicecalc/factorials"
-	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
-func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabilities.Probabilities, error) {
+func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller.Probabilities, error) {
 	if err := params.Validate(); err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabili
 	for i := half + 1; i < len; i++ {
 		values[i] = values[len-1-i]
 	}
-	return probabilities.NewProbabilities(min, max, totalCount, values)
+	return dice_roller.NewProbabilities(min, max, totalCount, values)
 }
 
 func calculateValueSlots(rolls []*_DiceRoll, factorials *factorials.Factorials) int {
