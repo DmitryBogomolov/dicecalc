@@ -6,25 +6,17 @@ import (
 )
 
 func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller.Probabilities, error) {
-	if err := params.Validate(); err != nil {
-		return nil, err
+	calculateValues := func(k int, roller *dice_roller.DiceRoller) []int {
+		calculate := sum_dice_base.MakeDistinctRollsCalculator(roller)
+		rolls := []dice_roller.DiceRoll{roller.IdxToRoll(0)}
+		result := make([]int, k)
+		for i := 0; i < k; i++ {
+			result[i] = sum_dice_base.CalculateDistinctRolls(rolls, calculate)
+			rolls = getNextRolls(rolls, roller)
+		}
+		return result
 	}
-	min := params.DiceCount
-	max := params.DiceCount * params.DiceSides
-	len := max - min + 1
-	values := make([]int, len)
-	roller := dice_roller.NewRoller(params)
-	measureRolls := sum_dice_base.MakeRollsMeasurer(roller)
-	rolls := []dice_roller.DiceRoll{roller.IdxToRoll(0)}
-	half := len >> 1
-	for i := 0; i <= half; i++ {
-		values[i] = measureRolls(rolls)
-		rolls = getNextRolls(rolls, roller)
-	}
-	for i := half + 1; i < len; i++ {
-		values[i] = values[(len - 1 - i)]
-	}
-	return dice_roller.NewProbabilities(min, max, roller.TotalRolls(), values)
+	return sum_dice_base.CalculateProbabilities(params, calculateValues)
 }
 
 func getNextRollsForRoll(roll dice_roller.DiceRoll, roller *dice_roller.DiceRoller) []dice_roller.DiceRoll {

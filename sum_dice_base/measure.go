@@ -2,10 +2,9 @@ package sum_dice_base
 
 import "github.com/DmitryBogomolov/dicecalc/dice_roller"
 
-type MeasureRoll func(dice_roller.DiceRoll) int
-type MeasureRolls func([]dice_roller.DiceRoll) int
+type DistinctRollsCalculator func(dice_roller.DiceRoll) int
 
-func MakeRollMeasurer(roller *dice_roller.DiceRoller) MeasureRoll {
+func MakeDistinctRollsCalculator(roller *dice_roller.DiceRoller) DistinctRollsCalculator {
 	factorials := make([]int, roller.DiceCount())
 	factorials[0] = 1
 	for i := 1; i < len((factorials)); i++ {
@@ -26,13 +25,10 @@ func MakeRollMeasurer(roller *dice_roller.DiceRoller) MeasureRoll {
 	}
 }
 
-func MakeRollsMeasurer(roller *dice_roller.DiceRoller) MeasureRolls {
-	measure := MakeRollMeasurer(roller)
-	return func(rolls []dice_roller.DiceRoll) int {
-		c := 0
-		for _, roll := range rolls {
-			c += measure(roll)
-		}
-		return c
+func CalculateDistinctRolls(rolls []dice_roller.DiceRoll, calculate DistinctRollsCalculator) int {
+	count := 0
+	for _, roll := range rolls {
+		count += calculate(roll)
 	}
+	return count
 }
