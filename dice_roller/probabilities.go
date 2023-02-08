@@ -5,20 +5,20 @@ import "fmt"
 type Probabilities struct {
 	min   int
 	max   int
-	total int
+	total uint64
 	items []int
 }
 
-func NewProbabilities(minValue, maxValue, totalVariants int, valuesVariants []int) (*Probabilities, error) {
+func NewProbabilities(minValue int, maxValue int, totalVariants uint64, valuesVariants []int) (*Probabilities, error) {
 	if minValue > maxValue {
 		return nil, fmt.Errorf("bad min value %d or max value %d", minValue, maxValue)
 	}
 	if len(valuesVariants) != maxValue-minValue+1 {
 		return nil, fmt.Errorf("bad variants %v (!= %d)", valuesVariants, maxValue-minValue+1)
 	}
-	check := 0
+	check := uint64(0)
 	for _, valueVariants := range valuesVariants {
-		check += valueVariants
+		check += uint64(valueVariants)
 	}
 	if check != totalVariants {
 		return nil, fmt.Errorf("bad total %d (!= %d)", totalVariants, check)
@@ -39,7 +39,7 @@ func (target *Probabilities) MaxValue() int {
 	return target.max
 }
 
-func (target *Probabilities) TotalCount() int {
+func (target *Probabilities) TotalCount() uint64 {
 	return target.total
 }
 

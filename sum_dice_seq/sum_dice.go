@@ -38,7 +38,7 @@ func getNextRollsForRoll(roll dice_roller.DiceRoll, roller *dice_roller.DiceRoll
 
 func getNextRolls(rolls []dice_roller.DiceRoll, roller *dice_roller.DiceRoller) []dice_roller.DiceRoll {
 	var result []dice_roller.DiceRoll
-	index := map[int]int{}
+	index := map[uint64]int{}
 	for _, roll := range rolls {
 		list := getNextRollsForRoll(roll, roller)
 		for _, candidate := range list {

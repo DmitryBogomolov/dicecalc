@@ -14,9 +14,9 @@ func CollectTestData(params dice_roller.DiceRollParameters, measureRoll func([]i
 	for i := range dices {
 		dices[i] = 1
 	}
-	total := int(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
+	total := uint64(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
 	index := make(map[int]int)
-	for i := 0; i < total; i++ {
+	for i := uint64(0); i < total; i++ {
 		value := measureRoll(dices)
 		advanceRoll(dices, params.DiceSides)
 		index[value]++
