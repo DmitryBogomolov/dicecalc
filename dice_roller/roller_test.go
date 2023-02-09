@@ -8,7 +8,7 @@ import (
 )
 
 func TestDiceRoller_GetRollFromIdx(t *testing.T) {
-	roller := NewRoller(DiceRollParameters{DiceCount: 3, DiceSides: 6})
+	roller, _ := NewRoller(DiceRollParameters{DiceCount: 3, DiceSides: 6})
 	assert.Equal(t, uint64(0), roller.GetRollIdx(DiceRoll{1, 1, 1}))
 	assert.Equal(t, uint64(1), roller.GetRollIdx(DiceRoll{1, 1, 2}))
 	assert.Equal(t, uint64(5), roller.GetRollIdx(DiceRoll{1, 1, 6}))
@@ -19,7 +19,7 @@ func TestDiceRoller_GetRollFromIdx(t *testing.T) {
 }
 
 func TestDiceRoller_IdxToRoll(t *testing.T) {
-	roller := NewRoller(DiceRollParameters{DiceCount: 3, DiceSides: 6})
+	roller, _ := NewRoller(DiceRollParameters{DiceCount: 3, DiceSides: 6})
 	assert.Equal(t, DiceRoll{1, 1, 1}, roller.IdxToRoll(0))
 	assert.Equal(t, DiceRoll{1, 1, 2}, roller.IdxToRoll(1))
 	assert.Equal(t, DiceRoll{1, 1, 6}, roller.IdxToRoll(5))
@@ -30,6 +30,6 @@ func TestDiceRoller_IdxToRoll(t *testing.T) {
 }
 
 func TestDiceRoller_CloneRoll(t *testing.T) {
-	roller := NewRoller(DiceRollParameters{DiceCount: 3, DiceSides: 6})
+	roller, _ := NewRoller(DiceRollParameters{DiceCount: 3, DiceSides: 6})
 	assert.Equal(t, DiceRoll{1, 2, 3}, roller.CloneRoll(DiceRoll{1, 2, 3}))
 }

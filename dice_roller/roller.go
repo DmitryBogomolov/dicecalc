@@ -1,6 +1,9 @@
 package dice_roller
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 type DiceRoller struct {
 	diceCount  int
@@ -10,12 +13,22 @@ type DiceRoller struct {
 
 type DiceRoll []int
 
-func NewRoller(params DiceRollParameters) *DiceRoller {
+func NewRoller(params DiceRollParameters) (roller *DiceRoller, err error) {
+	if params.DiceCount < 1 {
+		return nil, fmt.Errorf("bad dice count: %d", params.DiceCount)
+	}
+	if params.DiceSides < 1 {
+		return nil, fmt.Errorf("bad dice sides: %d", params.DiceSides)
+	}
+	total := math.Pow(float64(params.DiceSides), float64(params.DiceCount))
+	if total > math.MaxUint64 {
+		return nil, fmt.Errorf("too big values: %d or %d", params.DiceCount, params.DiceSides)
+	}
 	return &DiceRoller{
 		diceCount:  params.DiceCount,
 		diceSides:  params.DiceSides,
-		totalRolls: uint64(math.Pow(float64(params.DiceSides), float64(params.DiceCount))),
-	}
+		totalRolls: uint64(total),
+	}, nil
 }
 
 func (roller *DiceRoller) DiceCount() int {
