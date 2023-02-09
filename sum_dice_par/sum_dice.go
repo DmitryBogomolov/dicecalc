@@ -1,6 +1,8 @@
 package sum_dice_par
 
 import (
+	"sync"
+
 	"github.com/DmitryBogomolov/dicecalc/dice_roller"
 	"github.com/DmitryBogomolov/dicecalc/sum_dice_base"
 )
@@ -10,10 +12,16 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 		calculate := sum_dice_base.MakeDistinctRollsCalculator(roller)
 		result := make([]int, k)
 		min := roller.DiceCount()
+		waigGroup := sync.WaitGroup{}
+		waigGroup.Add(k)
 		for i := 0; i < k; i++ {
-			rolls := collectAllRolls((i + min), roller)
-			result[i] = sum_dice_base.CalculateDistinctRolls(rolls, calculate)
+			go func(t int) {
+				rolls := collectAllRolls((t + min), roller)
+				result[t] = sum_dice_base.CalculateDistinctRolls(rolls, calculate)
+				waigGroup.Done()
+			}(i)
 		}
+		waigGroup.Wait()
 		return result
 	}
 	return sum_dice_base.CalculateProbabilities(params, calculateValues)
