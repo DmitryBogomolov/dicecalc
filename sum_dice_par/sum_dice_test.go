@@ -1,4 +1,4 @@
-package dicecalc_test
+package sum_dice_par_test
 
 import (
 	"strconv"
@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	. "github.com/DmitryBogomolov/dicecalc"
-	. "github.com/DmitryBogomolov/dicecalc/probabilities"
+	. "github.com/DmitryBogomolov/dicecalc/dice_roller"
+	. "github.com/DmitryBogomolov/dicecalc/sum_dice_par"
 	"github.com/DmitryBogomolov/dicecalc/test_helper"
 )
 
@@ -17,29 +17,6 @@ func TestCalculateProbabilities(t *testing.T) {
 	assert.Equal(t, 3, probabilities.MinValue())
 	assert.Equal(t, 18, probabilities.MaxValue())
 	assert.Equal(t, 16, probabilities.ValuesCount())
-}
-
-func TestValidation(t *testing.T) {
-	{
-		probabilities, err := CalculateProbabilities(DiceRollParameters{DiceCount: 0, DiceSides: 4})
-		assert.Nil(t, probabilities)
-		assert.Error(t, err)
-	}
-	{
-		probabilities, err := CalculateProbabilities(DiceRollParameters{DiceCount: 3, DiceSides: 0})
-		assert.Nil(t, probabilities)
-		assert.Error(t, err)
-	}
-	{
-		probabilities, err := CalculateProbabilities(DiceRollParameters{DiceCount: MAX_DICE_COUNT + 1, DiceSides: 4})
-		assert.Nil(t, probabilities)
-		assert.Error(t, err)
-	}
-	{
-		probabilities, err := CalculateProbabilities(DiceRollParameters{DiceCount: 3, DiceSides: MAX_DICE_SIDES + 1})
-		assert.Nil(t, probabilities)
-		assert.Error(t, err)
-	}
 }
 
 func Test3dX(t *testing.T) {
