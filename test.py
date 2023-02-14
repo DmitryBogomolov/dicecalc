@@ -49,32 +49,22 @@ def generate_test_data(dice_sides: int, dice_count: int) -> None:
             index[val] = index_item
         index_item[key] = index_item.get(key, 0) + 1
 
-    start = dice_count
-    end = dice_count * dice_sides + 1
-    for val in range(start, (start + end) // 2):
+    check_sum = 0
+
+    current_cnt = 0
+    for val in index.keys():
         index_item = index[val]
         val_cnt = sum(index_item.values())
-        print(f'{val:2}: {val_cnt:4}')
+        items = [f'{key}: {cnt}' for key, cnt in index_item.items()]
+        text = '  '.join(items)
+        check_sum += val_cnt
+        diff = val_cnt - current_cnt
+        current_cnt = val_cnt
+        text = ''
+        print(f'{val:2}: {val_cnt:4} {diff:4} {check_sum:6} #  {text}')
 
-    print('')
-    for val in range(start, (start + end) // 2):
-        k = val - start + 1
-        pyramid_volume = get_pyramid_volume(k, dice_count)
-        pyramid_height = get_pyramid_height(k, dice_count)
-        print(f'{k:2} {pyramid_height} {pyramid_volume}')
-
-    # check_sum = 0
-
-    # for val in index.keys():
-    #     index_item = index[val]
-    #     val_cnt = sum(index_item.values())
-    #     items = [f'{key}: {cnt}' for key, cnt in index_item.items()]
-    #     text = '  '.join(items)
-    #     check_sum = check_sum + val_cnt
-    #     print(f'{val:2}: {val_cnt:4} #  {text}')
-
-    # if check_sum != total_count:
-    #     raise RuntimeError('mismatch')
+    if check_sum != total_count:
+        raise RuntimeError('mismatch')
 
 if __name__ == '__main__':
     parser = ArgumentParser()
