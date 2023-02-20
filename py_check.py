@@ -12,24 +12,30 @@ def main() -> None:
     # parser.add_argument('rolls')
     # args = parser.parse_args()
     # dice_count, dice_sides = map(int, args.rolls.split('d'))
-
-    dice_count = 2
+    dice_count = 3
     dice_sides = 6
+
+    print('### Brute')
+    do_brute_variant(dice_count, dice_sides)
+    print('### Smart')
+    do_smart_variant(dice_count, dice_sides)
+
+def do_brute_variant(dice_count: int, dice_sides: int) -> None:
     min_val = dice_count
     max_val = dice_count * dice_sides
     mid_val = (min_val + max_val) // 2
 
     normal = get_normal(dice_count)
     points = prepare_points(dice_count, dice_sides)
-    thresholds = prepare_thresholds(dice_count, dice_sides, max_val - min_val + 1, normal)
+    thresholds = prepare_thresholds(dice_count, dice_sides, mid_val - min_val + 1, normal)
 
     total = dice_sides ** dice_count
     diag_len = np.linalg.norm(np.ones(dice_count) * dice_sides)
     eps = diag_len / dice_sides / 1000
     for i, threshold in enumerate(thresholds):
         portion = collect_points(normal, threshold + eps, points)
-        to_check = measure_volume(threshold, dice_count, dice_sides)
-        print(f'{i + min_val:2}: {len(portion):4} / {len(portion) / total:.3} || {to_check:.3}')
+        fraction = len(portion) / total
+        print(f'{i + min_val:2}: {len(portion):4} / {fraction:.4}')
 
 def get_normal(dice_count: int) -> Vector:
     normal = np.ones(dice_count)
@@ -99,6 +105,35 @@ def measure_volume(value: float, dice_count: int, dice_sides: int) -> float:
     t = value * math.sqrt(dice_count) / dice_sides
     vol = get_volume(t, dice_count)
     return vol
+
+def do_smart_variant(dice_count: int, dice_sides: int) -> None:
+    min_val = dice_count
+    max_val = dice_count * dice_sides
+    mid_val = (min_val + max_val) // 2
+
+    grand: float = dice_sides ** dice_count
+    prev_total: int = 0
+    pickers = prepare_pickers(dice_count, dice_sides, mid_val - min_val + 1)
+    normal = np.ones(dice_count)
+    part = get_volume(1, dice_count)
+    for i, picker in enumerate(pickers):
+        alpha = np.dot(normal, picker / dice_sides)
+        vol = get_volume(alpha, dice_count) * grand
+        aux = round((vol - prev_total) / part)
+        curr_total = prev_total + aux
+        prev_total = curr_total
+        print(f'{i + min_val:2}: {curr_total:4}')
+
+def prepare_pickers(dice_count: int, dice_sides: int, count: int) -> List[Vector]:
+    ret: List[Vector] = []
+    vec = np.zeros(dice_count)
+    for _ in range(count):
+        for idx in range(dice_count - 1, -1, -1):
+            if vec[idx] + 1 <= dice_sides:
+                vec[idx] += 1
+                break
+        ret.append(np.copy(vec))
+    return ret
 
 if __name__ == '__main__':
     main()
