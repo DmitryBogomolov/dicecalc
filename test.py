@@ -1,54 +1,46 @@
 #/usr/bin/env python3
 
-from typing import Final, List, Dict
+from typing import List, Dict
+from argparse import ArgumentParser
 import math
 
 DiceRoll = List[int]
 
-DICE_COUNT: Final[int] = 3
-DICE_SIDES: Final[int] = 6
-
-total_count = DICE_SIDES ** DICE_COUNT
-
-def init_roll() -> DiceRoll:
-    return [1 for _ in range(DICE_COUNT)]
-
-def advance_roll(roll: DiceRoll) -> None:
-    for idx in range(DICE_COUNT - 1, -1, -1):
-        roll[idx] = roll[idx] + 1
-        if roll[idx] > DICE_SIDES:
-            roll[idx] = 1
-        else:
-            break
-
 def measure_roll(roll: DiceRoll) -> int:
     return sum(roll)
+
+def get_roll_idx(roll: DiceRoll, dice_count: int, dice_sides: int) -> int:
+    idx = 0
+    k = 1
+    for i in range(dice_count - 1, -1, -1):
+        idx += k * (roll[i] - 1)
+        k *= dice_sides
+    return idx
 
 def get_roll_key(roll: DiceRoll) -> str:
     return ''.join(map(str, sorted(roll)))
 
-def get_roll_idx(roll: DiceRoll) -> int:
-    idx = 0
-    k = 1
-    for i in range(DICE_COUNT - 1, -1, -1):
-        idx += k * (roll[i] - 1)
-        k *= DICE_SIDES
-    return idx
-
-def get_roll_from_idx(idx: int) -> DiceRoll:
-    roll = init_roll()
+def get_roll_from_idx(idx: int, dice_count: int, dice_sides: int) -> DiceRoll:
+    roll = [0 for _ in range(dice_count)]
     residue = idx
-    factor = total_count
-    for i in range(DICE_COUNT):
-        factor //= DICE_SIDES
+    factor: int = dice_sides ** dice_count
+    for i in range(dice_count):
+        factor //= dice_sides
         k, residue = divmod(residue, factor)
         roll[i] = k + 1
     return roll
 
-def test_1() -> None:
-    roll = init_roll()
+def get_pyramid_volume(step: int, dice_count: int) -> float:
+    return (step ** dice_count) * 0.5
+
+def get_pyramid_height(step: int, dice_count: int) -> float:
+    return step / math.sqrt(dice_count)
+
+def generate_test_data(dice_sides: int, dice_count: int) -> None:
     index: Dict[int, Dict[str, int]] = {}
-    for _ in range(total_count):
+    total_count = dice_sides ** dice_count
+    for i in range(total_count):
+        roll = get_roll_from_idx(i, dice_count, dice_sides)
         key = get_roll_key(roll)
         val = measure_roll(roll)
         index_item = index.get(val)
@@ -56,40 +48,28 @@ def test_1() -> None:
             index_item = {}
             index[val] = index_item
         index_item[key] = index_item.get(key, 0) + 1
-        advance_roll(roll)
 
     check_sum = 0
+
+    current_cnt = 0
     for val in index.keys():
         index_item = index[val]
         val_cnt = sum(index_item.values())
         items = [f'{key}: {cnt}' for key, cnt in index_item.items()]
         text = '  '.join(items)
-        check_sum = check_sum + val_cnt
-        print(f'{val:2}: {val_cnt:4} #  {text}')
+        check_sum += val_cnt
+        diff = val_cnt - current_cnt
+        current_cnt = val_cnt
+        text = ''
+        print(f'{val:2}: {val_cnt:4} {diff:4} {check_sum:6} #  {text}')
+
     if check_sum != total_count:
         raise RuntimeError('mismatch')
 
-def test_2() -> None:
-    roll = init_roll()
-    index: Dict[int, List[int]] = {}
-    for _ in range(total_count):
-        idx = get_roll_idx(roll)
-        val = measure_roll(roll)
-        index_item = index.get(val)
-        if not index_item:
-            index_item = []
-            index[val] = index_item
-        index_item.append(idx)
-        advance_roll(roll)
-
-    width = math.ceil(math.log10(total_count))
-    for val in index.keys():
-        index_item = index[val]
-        data = ' '.join(map(lambda t: str(t).rjust(width), index_item))
-        diffs = [index_item[i] - index_item[i - 1] for i in range(1, len(index_item))]
-        diffs_data = ' '.join(map(lambda t: str(t).rjust(width - 1), diffs))
-        print(f'{val:2}: {data}')
-        print(f'  {diffs_data}')
-
 if __name__ == '__main__':
-    test_2()
+    parser = ArgumentParser()
+    parser.add_argument('schema')
+    args = parser.parse_args()
+    dice_count, dice_sides = map(int, args.schema.split('d'))
+    print(dice_count, dice_sides)
+    generate_test_data(dice_sides=dice_sides, dice_count=dice_count)
