@@ -4,7 +4,7 @@ import (
 	"sync"
 
 	"github.com/DmitryBogomolov/dicecalc/dice_roller"
-	"github.com/DmitryBogomolov/dicecalc/sum_dice_base"
+	"github.com/DmitryBogomolov/dicecalc/outdated/sum_dice_base"
 )
 
 func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller.Probabilities, error) {

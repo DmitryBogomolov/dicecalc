@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/DmitryBogomolov/dicecalc/dice_roller"
-	"github.com/DmitryBogomolov/dicecalc/sum_dice_par"
-	"github.com/DmitryBogomolov/dicecalc/sum_dice_seq"
+	"github.com/DmitryBogomolov/dicecalc/outdated/sum_dice_par"
+	"github.com/DmitryBogomolov/dicecalc/outdated/sum_dice_seq"
 )
 
 func main() {
