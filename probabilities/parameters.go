@@ -1,4 +1,4 @@
-package dice_roller
+package probabilities
 
 type DiceRollParameters struct {
 	DiceSides int

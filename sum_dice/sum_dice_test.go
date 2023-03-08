@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/DmitryBogomolov/dicecalc/dice_roller"
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
 	"github.com/DmitryBogomolov/dicecalc/test_helper"
 )
 
@@ -51,7 +51,7 @@ func checkProbabilities(t *testing.T, name string) {
 		parts := strings.Split(name, "d")
 		count, _ := strconv.Atoi(parts[0])
 		sides, _ := strconv.Atoi(parts[1])
-		params := dice_roller.DiceRollParameters{DiceCount: count, DiceSides: sides}
+		params := probabilities.DiceRollParameters{DiceCount: count, DiceSides: sides}
 		measure := func(roll []int) int {
 			sum := 0
 			for _, dice := range roll {

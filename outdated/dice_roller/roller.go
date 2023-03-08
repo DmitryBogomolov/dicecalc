@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/DmitryBogomolov/dicecalc/dice_roller"
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
 type DiceRoller struct {
@@ -15,7 +15,7 @@ type DiceRoller struct {
 
 type DiceRoll []int
 
-func NewRoller(params dice_roller.DiceRollParameters) (roller *DiceRoller, err error) {
+func NewRoller(params probabilities.DiceRollParameters) (roller *DiceRoller, err error) {
 	if params.DiceCount < 1 {
 		return nil, fmt.Errorf("bad dice count: %d", params.DiceCount)
 	}

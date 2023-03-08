@@ -6,10 +6,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/DmitryBogomolov/dicecalc/dice_roller"
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
-func CollectTestData(params dice_roller.DiceRollParameters, measureRoll func([]int) int) *dice_roller.Probabilities {
+func CollectTestData(params probabilities.DiceRollParameters, measureRoll func([]int) int) *probabilities.Probabilities {
 	dices := make([]int, params.DiceCount)
 	for i := range dices {
 		dices[i] = 1
@@ -35,7 +35,7 @@ func CollectTestData(params dice_roller.DiceRollParameters, measureRoll func([]i
 	for key, val := range index {
 		values[key-minValue] = val
 	}
-	probs, _ := dice_roller.NewProbabilities(minValue, maxValue, total, values)
+	probs, _ := probabilities.NewProbabilities(minValue, maxValue, total, values)
 	return probs
 }
 
@@ -50,7 +50,7 @@ func advanceRoll(dices []int, diceSides int) {
 	}
 }
 
-func extractValues(probs *dice_roller.Probabilities) []int {
+func extractValues(probs *probabilities.Probabilities) []int {
 	values := make([]int, probs.ValuesCount())
 	for i := range values {
 		values[i] = probs.ValueCount(probs.MinValue() + i)
@@ -58,7 +58,7 @@ func extractValues(probs *dice_roller.Probabilities) []int {
 	return values
 }
 
-func CheckProbabilities(t *testing.T, expected, actual *dice_roller.Probabilities) {
+func CheckProbabilities(t *testing.T, expected, actual *probabilities.Probabilities) {
 	assert.Equal(t, expected.MinValue(), actual.MinValue())
 	assert.Equal(t, expected.MaxValue(), actual.MaxValue())
 	assert.Equal(t, expected.TotalCount(), actual.TotalCount())

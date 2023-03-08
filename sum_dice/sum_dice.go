@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/DmitryBogomolov/dicecalc/dice_roller"
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
 // CalculateProbabilities returns probabilities of sums for dice rolls.
@@ -17,7 +17,7 @@ import (
 //
 // Plane x_1 + ... + x_n = t (0 < t < n * m) intersects set of small cubes.
 // All of them define rolls with the same sum. Numbers of cubes gives probability of that sum.
-func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller.Probabilities, error) {
+func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabilities.Probabilities, error) {
 	if params.DiceCount < 1 {
 		return nil, fmt.Errorf("bad dice count: %d", params.DiceCount)
 	}
@@ -35,7 +35,7 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 	// For a single dice there is no need for any calculations.
 	if params.DiceCount == 1 {
 		fillSimpleVariants(variants)
-		return dice_roller.NewProbabilities(minVal, maxVal, uint64(params.DiceSides), variants)
+		return probabilities.NewProbabilities(minVal, maxVal, uint64(params.DiceSides), variants)
 	}
 	// Only half of cube is required to be inspected. The other half is symmetrical.
 	halfCount := int(math.Ceil(0.5 * float64(count)))
@@ -46,7 +46,7 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 	// and find newly filled ones - they belong to plane intersection.
 	fillVariants(variants, halfCount, params.DiceCount, params.DiceSides)
 	fillSymmetricVariants(variants, halfCount)
-	return dice_roller.NewProbabilities(minVal, maxVal, uint64(total), variants)
+	return probabilities.NewProbabilities(minVal, maxVal, uint64(total), variants)
 }
 
 func fillSimpleVariants(variants []int) {

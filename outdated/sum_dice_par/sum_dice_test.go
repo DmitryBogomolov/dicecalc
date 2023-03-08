@@ -7,13 +7,13 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	. "github.com/DmitryBogomolov/dicecalc/dice_roller"
 	. "github.com/DmitryBogomolov/dicecalc/outdated/sum_dice_par"
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
 	"github.com/DmitryBogomolov/dicecalc/test_helper"
 )
 
 func TestCalculateProbabilities(t *testing.T) {
-	probabilities, _ := CalculateProbabilities(DiceRollParameters{DiceCount: 3, DiceSides: 6})
+	probabilities, _ := CalculateProbabilities(probabilities.DiceRollParameters{DiceCount: 3, DiceSides: 6})
 	assert.Equal(t, 3, probabilities.MinValue())
 	assert.Equal(t, 18, probabilities.MaxValue())
 	assert.Equal(t, 16, probabilities.ValuesCount())
@@ -44,7 +44,7 @@ func checkProbabilities(t *testing.T, name string) {
 		parts := strings.Split(name, "d")
 		count, _ := strconv.Atoi(parts[0])
 		sides, _ := strconv.Atoi(parts[1])
-		params := DiceRollParameters{DiceCount: count, DiceSides: sides}
+		params := probabilities.DiceRollParameters{DiceCount: count, DiceSides: sides}
 		measure := func(roll []int) int {
 			sum := 0
 			for _, dice := range roll {
