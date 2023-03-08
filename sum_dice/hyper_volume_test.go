@@ -32,13 +32,3 @@ func TestGetHyperVolume(t *testing.T) {
 	assert.Equal(t, 69.0/72.0, getHyperVolume(3, 4))
 	assert.Equal(t, 1.0, getHyperVolume(4, 4))
 }
-
-// func TestGetFactorial(t *testing.T) {
-// 	assert.Equal(t, uint64(1), getFactorial(0))
-// 	assert.Equal(t, uint64(1), getFactorial(1))
-// 	assert.Equal(t, uint64(2), getFactorial(2))
-// 	assert.Equal(t, uint64(6), getFactorial(3))
-// 	assert.Equal(t, uint64(24), getFactorial(4))
-// 	assert.Equal(t, uint64(120), getFactorial(5))
-// 	assert.Equal(t, uint64(3628800), getFactorial(10))
-// }

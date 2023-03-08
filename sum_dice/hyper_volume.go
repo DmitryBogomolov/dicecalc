@@ -39,14 +39,3 @@ func getHyperVolume(t float64, n int) float64 {
 	}
 	return sum
 }
-
-// var factorials []uint64 = []uint64{1, 1}
-
-// func getFactorial(k int) uint64 {
-// 	if len(factorials) >= (k + 1) {
-// 		return factorials[k]
-// 	}
-// 	ret := uint64(k) * getFactorial((k - 1))
-// 	factorials = append(factorials, ret)
-// 	return ret
-// }
