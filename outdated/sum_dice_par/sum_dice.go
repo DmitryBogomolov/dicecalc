@@ -3,11 +3,12 @@ package sum_dice_par
 import (
 	"sync"
 
-	"github.com/DmitryBogomolov/dicecalc/dice_roller"
+	dr "github.com/DmitryBogomolov/dicecalc/dice_roller"
+	"github.com/DmitryBogomolov/dicecalc/outdated/dice_roller"
 	"github.com/DmitryBogomolov/dicecalc/outdated/sum_dice_base"
 )
 
-func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller.Probabilities, error) {
+func CalculateProbabilities(params dr.DiceRollParameters) (*dr.Probabilities, error) {
 	calculateValues := func(k int, roller *dice_roller.DiceRoller) []int {
 		calculate := sum_dice_base.MakeDistinctRollsCalculator(roller)
 		result := make([]int, k)

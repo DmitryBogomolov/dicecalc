@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	. "github.com/DmitryBogomolov/dicecalc/dice_roller"
+	. "github.com/DmitryBogomolov/dicecalc/outdated/dice_roller"
 	"github.com/stretchr/testify/assert"
 )
 

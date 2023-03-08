@@ -1,12 +1,15 @@
 package sum_dice_base
 
-import "github.com/DmitryBogomolov/dicecalc/dice_roller"
+import (
+	"github.com/DmitryBogomolov/dicecalc/dice_roller"
+	dice_roller2 "github.com/DmitryBogomolov/dicecalc/outdated/dice_roller"
+)
 
 func CalculateProbabilities(
 	params dice_roller.DiceRollParameters,
-	calculateValues func(int, *dice_roller.DiceRoller) []int,
+	calculateValues func(int, *dice_roller2.DiceRoller) []int,
 ) (*dice_roller.Probabilities, error) {
-	roller, err := dice_roller.NewRoller(params)
+	roller, err := dice_roller2.NewRoller(params)
 	if err != nil {
 		return nil, err
 	}
