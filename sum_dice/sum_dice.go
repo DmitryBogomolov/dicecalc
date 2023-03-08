@@ -21,12 +21,23 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 	maxVal := params.DiceCount * params.DiceSides
 	count := maxVal - minVal + 1
 	variants := make([]int, count)
+	// For a single dice there is no need for any calculations.
+	if params.DiceCount == 1 {
+		fillSimpleVariants(variants)
+		return dice_roller.NewProbabilities(minVal, maxVal, uint64(params.DiceSides), variants)
+	}
 	halfCount := int(math.Ceil(0.5 * float64(count)))
 	// Only half of cube is required to be inspected. The other half is symmetrical.
 	fillVariants(variants, halfCount, params.DiceCount, params.DiceSides)
 	fillSymmetricVariants(variants, halfCount)
 	total := uint64(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
 	return dice_roller.NewProbabilities(minVal, maxVal, total, variants)
+}
+
+func fillSimpleVariants(variants []int) {
+	for i := range variants {
+		variants[i] = 1
+	}
 }
 
 func fillVariants(variants []int, count int, diceCount int, diceSides int) {

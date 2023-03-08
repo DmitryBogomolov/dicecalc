@@ -19,7 +19,23 @@ func TestCalculateProbabilities(t *testing.T) {
 	assert.Equal(t, 7, probs.ValuesCount())
 }
 
+func Test1dX(t *testing.T) {
+	checkProbabilities(t, "1d1")
+	checkProbabilities(t, "1d5")
+	checkProbabilities(t, "1d10")
+	checkProbabilities(t, "1d20")
+}
+
+func Test2dX(t *testing.T) {
+	checkProbabilities(t, "2d1")
+	checkProbabilities(t, "2d4")
+	checkProbabilities(t, "2d6")
+	checkProbabilities(t, "2d10")
+	checkProbabilities(t, "2d20")
+}
+
 func Test3dX(t *testing.T) {
+	checkProbabilities(t, "3d1")
 	checkProbabilities(t, "3d4")
 	checkProbabilities(t, "3d6")
 	checkProbabilities(t, "3d10")
@@ -27,6 +43,7 @@ func Test3dX(t *testing.T) {
 }
 
 func Test4dX(t *testing.T) {
+	checkProbabilities(t, "4d1")
 	checkProbabilities(t, "4d4")
 	checkProbabilities(t, "4d6")
 	checkProbabilities(t, "4d10")
