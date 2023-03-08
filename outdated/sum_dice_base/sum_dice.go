@@ -8,7 +8,7 @@ import (
 func CalculateProbabilities(
 	params probabilities.DiceRollParameters,
 	calculateValues func(int, *dice_roller.DiceRoller) []int,
-) (*probabilities.Probabilities, error) {
+) (probabilities.Probabilities, error) {
 	roller, err := dice_roller.NewRoller(params)
 	if err != nil {
 		return nil, err

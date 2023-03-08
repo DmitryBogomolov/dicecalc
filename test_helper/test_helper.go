@@ -9,7 +9,7 @@ import (
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
-func CollectTestData(params probabilities.DiceRollParameters, measureRoll func([]int) int) *probabilities.Probabilities {
+func CollectTestData(params probabilities.DiceRollParameters, measureRoll func([]int) int) probabilities.Probabilities {
 	dices := make([]int, params.DiceCount)
 	for i := range dices {
 		dices[i] = 1
@@ -50,7 +50,7 @@ func advanceRoll(dices []int, diceSides int) {
 	}
 }
 
-func extractValues(probs *probabilities.Probabilities) []int {
+func extractValues(probs probabilities.Probabilities) []int {
 	values := make([]int, probs.ValuesCount())
 	for i := range values {
 		values[i] = probs.ValueCount(probs.MinValue() + i)
@@ -58,7 +58,7 @@ func extractValues(probs *probabilities.Probabilities) []int {
 	return values
 }
 
-func CheckProbabilities(t *testing.T, expected, actual *probabilities.Probabilities) {
+func CheckProbabilities(t *testing.T, expected, actual probabilities.Probabilities) {
 	assert.Equal(t, expected.MinValue(), actual.MinValue())
 	assert.Equal(t, expected.MaxValue(), actual.MaxValue())
 	assert.Equal(t, expected.TotalCount(), actual.TotalCount())

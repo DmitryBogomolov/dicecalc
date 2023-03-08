@@ -29,7 +29,7 @@ func main() {
 func testFunc(
 	tag string,
 	params probabilities.DiceRollParameters,
-	f func(probabilities.DiceRollParameters) (*probabilities.Probabilities, error),
+	f func(probabilities.DiceRollParameters) (probabilities.Probabilities, error),
 ) {
 	start := time.Now()
 	f(params)

@@ -17,7 +17,7 @@ import (
 //
 // Plane x_1 + ... + x_n = t (0 < t < n * m) intersects set of small cubes.
 // All of them define rolls with the same sum. Numbers of cubes gives probability of that sum.
-func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabilities.Probabilities, error) {
+func CalculateProbabilities(params probabilities.DiceRollParameters) (probabilities.Probabilities, error) {
 	if params.DiceCount < 1 {
 		return nil, fmt.Errorf("bad dice count: %d", params.DiceCount)
 	}

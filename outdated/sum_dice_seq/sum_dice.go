@@ -6,7 +6,7 @@ import (
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
-func CalculateProbabilities(params probabilities.DiceRollParameters) (*probabilities.Probabilities, error) {
+func CalculateProbabilities(params probabilities.DiceRollParameters) (probabilities.Probabilities, error) {
 	calculateValues := func(k int, roller *dice_roller.DiceRoller) []int {
 		calculate := sum_dice_base.MakeDistinctRollsCalculator(roller)
 		rolls := []dice_roller.DiceRoll{roller.IdxToRoll(0)}

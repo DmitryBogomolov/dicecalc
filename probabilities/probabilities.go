@@ -2,15 +2,23 @@ package probabilities
 
 import "fmt"
 
-// TODO: Add interface. Don't forget to add implementation check.
-type Probabilities struct {
+type _Probabilities struct {
 	min   int
 	max   int
 	total uint64
 	items []int
 }
 
-func NewProbabilities(minValue int, maxValue int, totalVariants uint64, valuesVariants []int) (*Probabilities, error) {
+type Probabilities interface {
+	MinValue() int
+	MaxValue() int
+	TotalCount() uint64
+	ValuesCount() int
+	ValueCount(value int) int
+	ValueProbability(value int) float64
+}
+
+func NewProbabilities(minValue int, maxValue int, totalVariants uint64, valuesVariants []int) (Probabilities, error) {
 	if minValue > maxValue {
 		return nil, fmt.Errorf("bad value range: %d..%d", minValue, maxValue)
 	}
@@ -21,11 +29,10 @@ func NewProbabilities(minValue int, maxValue int, totalVariants uint64, valuesVa
 	for _, valueVariants := range valuesVariants {
 		check += uint64(valueVariants)
 	}
-	// TODO: Remove this argument. Just calculate.
 	if check != totalVariants {
-		return nil, fmt.Errorf("bad total %d (!= %d)", totalVariants, check)
+		return nil, fmt.Errorf("bad total %d - should be %d)", check, totalVariants)
 	}
-	return &Probabilities{
+	return &_Probabilities{
 		min:   minValue,
 		max:   maxValue,
 		total: totalVariants,
@@ -33,29 +40,29 @@ func NewProbabilities(minValue int, maxValue int, totalVariants uint64, valuesVa
 	}, nil
 }
 
-func (target *Probabilities) MinValue() int {
+func (target *_Probabilities) MinValue() int {
 	return target.min
 }
 
-func (target *Probabilities) MaxValue() int {
+func (target *_Probabilities) MaxValue() int {
 	return target.max
 }
 
-func (target *Probabilities) TotalCount() uint64 {
+func (target *_Probabilities) TotalCount() uint64 {
 	return target.total
 }
 
-func (target *Probabilities) ValuesCount() int {
+func (target *_Probabilities) ValuesCount() int {
 	return len(target.items)
 }
 
-func (target *Probabilities) ValueCount(value int) int {
+func (target *_Probabilities) ValueCount(value int) int {
 	if target.min <= value && value <= target.max {
 		return target.items[value-target.min]
 	}
 	return 0
 }
 
-func (target *Probabilities) ValueProbability(value int) float64 {
+func (target *_Probabilities) ValueProbability(value int) float64 {
 	return float64(target.ValueCount(value)) / float64(target.total)
 }
