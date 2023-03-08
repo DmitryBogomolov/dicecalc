@@ -1,11 +1,12 @@
 package sum_dice_seq
 
 import (
-	"github.com/DmitryBogomolov/dicecalc/dice_roller"
-	"github.com/DmitryBogomolov/dicecalc/sum_dice_base"
+	"github.com/DmitryBogomolov/dicecalc/outdated/dice_roller"
+	"github.com/DmitryBogomolov/dicecalc/outdated/sum_dice_base"
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
-func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller.Probabilities, error) {
+func CalculateProbabilities(params probabilities.DiceRollParameters) (probabilities.Probabilities, error) {
 	calculateValues := func(k int, roller *dice_roller.DiceRoller) []int {
 		calculate := sum_dice_base.MakeDistinctRollsCalculator(roller)
 		rolls := []dice_roller.DiceRoll{roller.IdxToRoll(0)}

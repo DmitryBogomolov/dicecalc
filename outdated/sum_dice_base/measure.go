@@ -1,6 +1,8 @@
 package sum_dice_base
 
-import "github.com/DmitryBogomolov/dicecalc/dice_roller"
+import (
+	"github.com/DmitryBogomolov/dicecalc/outdated/dice_roller"
+)
 
 type DistinctRollsCalculator func(dice_roller.DiceRoll) int
 

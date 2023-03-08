@@ -5,13 +5,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/DmitryBogomolov/dicecalc/dice_roller"
-	"github.com/DmitryBogomolov/dicecalc/sum_dice_par"
-	"github.com/DmitryBogomolov/dicecalc/sum_dice_seq"
+	"github.com/DmitryBogomolov/dicecalc/outdated/sum_dice_par"
+	"github.com/DmitryBogomolov/dicecalc/outdated/sum_dice_seq"
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
 )
 
 func main() {
-	params := dice_roller.DiceRollParameters{DiceCount: 10, DiceSides: 16}
+	params := probabilities.DiceRollParameters{DiceCount: 10, DiceSides: 16}
 
 	var waitGroup sync.WaitGroup
 	waitGroup.Add(2)
@@ -28,8 +28,8 @@ func main() {
 
 func testFunc(
 	tag string,
-	params dice_roller.DiceRollParameters,
-	f func(dice_roller.DiceRollParameters) (*dice_roller.Probabilities, error),
+	params probabilities.DiceRollParameters,
+	f func(probabilities.DiceRollParameters) (probabilities.Probabilities, error),
 ) {
 	start := time.Now()
 	f(params)

@@ -1,23 +1,14 @@
-package sum_dice_par_test
+package sum_dice_seq_test
 
 import (
 	"strconv"
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
-	. "github.com/DmitryBogomolov/dicecalc/dice_roller"
-	. "github.com/DmitryBogomolov/dicecalc/sum_dice_par"
+	. "github.com/DmitryBogomolov/dicecalc/outdated/sum_dice_seq"
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
 	"github.com/DmitryBogomolov/dicecalc/test_helper"
 )
-
-func TestCalculateProbabilities(t *testing.T) {
-	probabilities, _ := CalculateProbabilities(DiceRollParameters{DiceCount: 3, DiceSides: 6})
-	assert.Equal(t, 3, probabilities.MinValue())
-	assert.Equal(t, 18, probabilities.MaxValue())
-	assert.Equal(t, 16, probabilities.ValuesCount())
-}
 
 func Test3dX(t *testing.T) {
 	checkProbabilities(t, "3d4")
@@ -44,7 +35,7 @@ func checkProbabilities(t *testing.T, name string) {
 		parts := strings.Split(name, "d")
 		count, _ := strconv.Atoi(parts[0])
 		sides, _ := strconv.Atoi(parts[1])
-		params := DiceRollParameters{DiceCount: count, DiceSides: sides}
+		params := probabilities.DiceRollParameters{DiceCount: count, DiceSides: sides}
 		measure := func(roll []int) int {
 			sum := 0
 			for _, dice := range roll {
