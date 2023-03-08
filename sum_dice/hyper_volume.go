@@ -13,7 +13,7 @@ import (
 // t = n - at (1, ..., 1)
 //
 // The formula is
-// (1 / n!) * sum_{i=0}^{floor(t)} ( (-1)^i * C_n_i * (t - i)^n )
+// (1 / n!) * sum_{i=0}^{floor(t)} ( (-1)^i * C_n^i * (t - i)^n )
 func getHyperVolume(t float64, n int) float64 {
 	if n < 1 {
 		return 0
