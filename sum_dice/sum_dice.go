@@ -1,6 +1,7 @@
 package sum_dice
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/DmitryBogomolov/dicecalc/dice_roller"
@@ -17,6 +18,16 @@ import (
 // Plane x_1 + ... + x_n = t (0 < t < n * m) intersects set of small cubes.
 // All of them define rolls with the same sum. Numbers of cubes gives probability of that sum.
 func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller.Probabilities, error) {
+	if params.DiceCount < 1 {
+		return nil, fmt.Errorf("bad dice count: %d", params.DiceCount)
+	}
+	if params.DiceSides < 1 {
+		return nil, fmt.Errorf("bad dice sides: %d", params.DiceSides)
+	}
+	total := math.Pow(float64(params.DiceSides), float64(params.DiceCount))
+	if total > math.MaxUint64 {
+		return nil, fmt.Errorf("too big values: %d^%d", params.DiceCount, params.DiceSides)
+	}
 	minVal := params.DiceCount
 	maxVal := params.DiceCount * params.DiceSides
 	count := maxVal - minVal + 1
@@ -35,8 +46,7 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 	// and find newly filled ones - they belong to plane intersection.
 	fillVariants(variants, halfCount, params.DiceCount, params.DiceSides)
 	fillSymmetricVariants(variants, halfCount)
-	total := uint64(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
-	return dice_roller.NewProbabilities(minVal, maxVal, total, variants)
+	return dice_roller.NewProbabilities(minVal, maxVal, uint64(total), variants)
 }
 
 func fillSimpleVariants(variants []int) {
