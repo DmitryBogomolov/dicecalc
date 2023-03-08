@@ -15,7 +15,8 @@ import (
 // For rolls of n m-sided dices consider n-dimensional cube with side of m.
 // That cube consists of smaller m^n cubes with side of 1. Each small cube defines one specific roll.
 //
-// ...
+// Subcube with side of 1 contains all small cubes for max of 1. Subcube with side of 2 without previous subcube
+// contains all small cubes for max of 2. Etc.
 func CalculateMaxProbabilities(params probabilities.DiceRollParameters) (probabilities.Probabilities, error) {
 	if params.DiceCount < 1 {
 		return nil, fmt.Errorf("bad dice count: %d", params.DiceCount)
@@ -43,7 +44,8 @@ func CalculateMaxProbabilities(params probabilities.DiceRollParameters) (probabi
 // For rolls of n m-sided dices consider n-dimensional cube with side of m.
 // That cube consists of smaller m^n cubes with side of 1. Each small cube defines one specific roll.
 //
-// ...
+// The idea with subcube is the same with that of "max" case except that subcubes
+// grow from the other side of big cube.
 func CalculateMinProbabilities(params probabilities.DiceRollParameters) (probabilities.Probabilities, error) {
 	if params.DiceCount < 1 {
 		return nil, fmt.Errorf("bad dice count: %d", params.DiceCount)
