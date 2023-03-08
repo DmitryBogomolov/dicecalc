@@ -14,6 +14,7 @@ import (
 //
 // The formula is
 // (1 / n!) * sum_{i=0}^{floor(t)} ( (-1)^i * C_n^i * (t - i)^n )
+// https://math.stackexchange.com/questions/454583/volume-of-cube-section-above-intersection-with-plane
 func getHyperVolume(t float64, n int) float64 {
 	if n < 1 {
 		return 0

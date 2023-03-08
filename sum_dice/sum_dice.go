@@ -26,8 +26,13 @@ func CalculateProbabilities(params dice_roller.DiceRollParameters) (*dice_roller
 		fillSimpleVariants(variants)
 		return dice_roller.NewProbabilities(minVal, maxVal, uint64(params.DiceSides), variants)
 	}
-	halfCount := int(math.Ceil(0.5 * float64(count)))
 	// Only half of cube is required to be inspected. The other half is symmetrical.
+	halfCount := int(math.Ceil(0.5 * float64(count)))
+	// There are n * m segments along big cube diagonal. There are m small cubes in diagonal.
+	// So there are n segments alogn each small cube diagonal. And each advance for 1 / (m * n) along
+	// big cube corresponds to 1 / n advance along small cube.
+	// On each advance along big diagonal take new volume, distribute it along small cubes
+	// and find newly filled ones - they belong to plane intersection.
 	fillVariants(variants, halfCount, params.DiceCount, params.DiceSides)
 	fillSymmetricVariants(variants, halfCount)
 	total := uint64(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
@@ -41,13 +46,16 @@ func fillSimpleVariants(variants []int) {
 }
 
 func fillVariants(variants []int, count int, diceCount int, diceSides int) {
+	// Precalculate small cube volume steps and make slots to keep track of small cubes filling.
 	volDiffs, volCounts := prepareDiffsAndCounts(diceCount)
 	prevVolume := 0.0
 	t := 1
 	factor := math.Pow(float64(diceSides), float64(diceCount))
 	for i := 0; i < count; i++ {
+		// For calculation purpose [0, mn] is mapped to [0, n].
 		currVolume := getHyperVolume(float64(t)/float64(diceSides), diceCount)
 		diffVolume := (currVolume - prevVolume) * factor
+		// Track small cube filling and find newly filled cubes.
 		k := distributeVolume(diffVolume, volDiffs, volCounts)
 		prevVolume = currVolume
 		t++
