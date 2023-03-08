@@ -2,6 +2,7 @@ package dice_roller
 
 import "fmt"
 
+// TODO: Add interface. Don't forget to add implementation check.
 type Probabilities struct {
 	min   int
 	max   int
@@ -11,15 +12,16 @@ type Probabilities struct {
 
 func NewProbabilities(minValue int, maxValue int, totalVariants uint64, valuesVariants []int) (*Probabilities, error) {
 	if minValue > maxValue {
-		return nil, fmt.Errorf("bad min value %d or max value %d", minValue, maxValue)
+		return nil, fmt.Errorf("bad value range: %d..%d", minValue, maxValue)
 	}
 	if len(valuesVariants) != maxValue-minValue+1 {
-		return nil, fmt.Errorf("bad variants %v (!= %d)", valuesVariants, maxValue-minValue+1)
+		return nil, fmt.Errorf("bad variants - length should be %d", maxValue-minValue+1)
 	}
 	check := uint64(0)
 	for _, valueVariants := range valuesVariants {
 		check += uint64(valueVariants)
 	}
+	// TODO: Remove this argument. Just calculate.
 	if check != totalVariants {
 		return nil, fmt.Errorf("bad total %d (!= %d)", totalVariants, check)
 	}
