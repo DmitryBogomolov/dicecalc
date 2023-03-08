@@ -24,6 +24,28 @@ func Test2dX(t *testing.T) {
 	checkProbabilities(t, "2d20")
 }
 
+func Test3dX(t *testing.T) {
+	checkProbabilities(t, "3d1")
+	checkProbabilities(t, "3d4")
+	checkProbabilities(t, "3d6")
+	checkProbabilities(t, "3d10")
+	checkProbabilities(t, "3d20")
+}
+
+func Test4dX(t *testing.T) {
+	checkProbabilities(t, "4d1")
+	checkProbabilities(t, "4d4")
+	checkProbabilities(t, "4d6")
+	checkProbabilities(t, "4d10")
+	checkProbabilities(t, "4d16")
+	checkProbabilities(t, "4d20")
+}
+
+func Test10dX(t *testing.T) {
+	checkProbabilities(t, "10d1")
+	checkProbabilities(t, "10d6")
+}
+
 func checkProbabilities(t *testing.T, name string) {
 	t.Run(name, func(t *testing.T) {
 		parts := strings.Split(name, "d")

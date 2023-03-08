@@ -1,6 +1,11 @@
 package max_dice
 
-import "github.com/DmitryBogomolov/dicecalc/probabilities"
+import (
+	"fmt"
+	"math"
+
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
+)
 
 // CalculateProbabilities returns probabilities of maxes for dice rolls.
 //
@@ -12,5 +17,29 @@ import "github.com/DmitryBogomolov/dicecalc/probabilities"
 //
 // ...
 func CalculateProbabilities(params probabilities.DiceRollParameters) (probabilities.Probabilities, error) {
-	return nil, nil
+	if params.DiceCount < 1 {
+		return nil, fmt.Errorf("bad dice count: %d", params.DiceCount)
+	}
+	if params.DiceSides < 1 {
+		return nil, fmt.Errorf("bad dice sides: %d", params.DiceSides)
+	}
+	total := math.Pow(float64(params.DiceSides), float64(params.DiceCount))
+	if total > math.MaxUint64 {
+		return nil, fmt.Errorf("too big values: %d^%d", params.DiceCount, params.DiceSides)
+	}
+	minVal := 1
+	maxVal := params.DiceSides
+	count := maxVal - minVal + 1
+	variants := make([]int, count)
+	fillVariants(variants, params.DiceCount, params.DiceSides)
+	return probabilities.NewProbabilities(minVal, maxVal, uint64(total), variants)
+}
+
+func fillVariants(variants []int, diceCount int, diceSides int) {
+	prevCount := uint64(0)
+	for i := 0; i < len(variants); i++ {
+		currCount := uint64(math.Pow(float64(i+1), float64(diceCount)))
+		variants[i] = int(currCount - prevCount)
+		prevCount = currCount
+	}
 }
