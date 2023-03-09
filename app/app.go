@@ -48,7 +48,7 @@ func main() {
 	}
 
 	title := fmt.Sprintf("Probabilities of %s (%s) rolls", *schemaVar, *modeVar)
-	displayRaw(probs, title)
+	fmt.Println(displayJson(probs, title))
 }
 
 func parseRollSchema(schema string) (params probabilities.DiceRollParameters, err error) {

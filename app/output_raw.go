@@ -3,20 +3,23 @@ package main
 import (
 	"fmt"
 	"math"
+	"strings"
 
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 	"golang.org/x/exp/constraints"
 )
 
-func displayRaw(probs probabilities.Probabilities, title string) {
-	fmt.Printf("%s / total %d\n", title, probs.TotalCount())
+func displayRaw(probs probabilities.Probabilities, title string) string {
+	var builder strings.Builder
+	builder.WriteString(fmt.Sprintf("%s / total %d\n", title, probs.TotalCount()))
 	valueSize, countSize, ratioSize := getColumnSizes(probs)
 	format := fmt.Sprintf("%%%dd %%%dd %%%d.%df%%%%\n", valueSize, countSize, ratioSize, 4)
 	for val := probs.MinValue(); val <= probs.MaxValue(); val++ {
 		count := probs.ValueCount(val)
 		ratio := probs.ValueProbability(val) * 100
-		fmt.Printf(format, val, count, ratio)
+		builder.WriteString(fmt.Sprintf(format, val, count, ratio))
 	}
+	return builder.String()
 }
 
 func getNumberSize[T constraints.Integer](num T) int {
