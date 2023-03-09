@@ -12,27 +12,34 @@ import (
 	"github.com/DmitryBogomolov/dicecalc/sum_dice"
 )
 
-type _Func func(probabilities.DiceRollParameters) (probabilities.Probabilities, error)
+type _CalcFunc func(probabilities.DiceRollParameters) (probabilities.Probabilities, error)
+type _DisplayFunc func(probabilities.Probabilities, string) string
 
-var modes = map[string]_Func{
+var modes = map[string]_CalcFunc{
 	"sum": sum_dice.CalculateProbabilities,
 	"min": minmax_dice.CalculateMinProbabilities,
 	"max": minmax_dice.CalculateMaxProbabilities,
 }
 
+var outputs = map[string]_DisplayFunc{
+	"raw":  displayRaw,
+	"json": displayJson,
+}
+
 func main() {
 	modeVar := flag.String("mode", "", "operation")
 	schemaVar := flag.String("schema", "", "roll schema")
+	outputVar := flag.String("output", "", "output format")
 	flag.Parse()
 	if len(os.Args) < 2 {
 		flag.Usage()
 		return
 	}
 
-	var fn _Func
+	var calcFn _CalcFunc
 	var params probabilities.DiceRollParameters
 	var err error
-	if fn, err = parseMode(*modeVar); err != nil {
+	if calcFn, err = parseMode(*modeVar); err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -42,13 +49,14 @@ func main() {
 	}
 
 	var probs probabilities.Probabilities
-	if probs, err = fn(params); err != nil {
+	if probs, err = calcFn(params); err != nil {
 		fmt.Println(err)
 		return
 	}
 
+	displayFn := parseOutput(*outputVar)
 	title := fmt.Sprintf("Probabilities of %s (%s) rolls", *schemaVar, *modeVar)
-	fmt.Println(displayJson(probs, title))
+	fmt.Println(displayFn(probs, title))
 }
 
 func parseRollSchema(schema string) (params probabilities.DiceRollParameters, err error) {
@@ -72,10 +80,18 @@ func parseRollSchema(schema string) (params probabilities.DiceRollParameters, er
 	return
 }
 
-func parseMode(mode string) (_Func, error) {
+func parseMode(mode string) (_CalcFunc, error) {
 	if fn, has := modes[mode]; has {
 		return fn, nil
 	} else {
 		return nil, fmt.Errorf("bad mode: %s", mode)
+	}
+}
+
+func parseOutput(output string) _DisplayFunc {
+	if fn, has := outputs[output]; has {
+		return fn
+	} else {
+		return displayRaw
 	}
 }
