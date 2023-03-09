@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -11,7 +10,6 @@ import (
 	"github.com/DmitryBogomolov/dicecalc/minmax_dice"
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 	"github.com/DmitryBogomolov/dicecalc/sum_dice"
-	"golang.org/x/exp/constraints"
 )
 
 type _Func func(probabilities.DiceRollParameters) (probabilities.Probabilities, error)
@@ -50,7 +48,7 @@ func main() {
 	}
 
 	title := fmt.Sprintf("Probabilities of %s (%s) rolls", *schemaVar, *modeVar)
-	displayProbabilities(probs, title)
+	displayRaw(probs, title)
 }
 
 func parseRollSchema(schema string) (params probabilities.DiceRollParameters, err error) {
@@ -80,34 +78,4 @@ func parseMode(mode string) (_Func, error) {
 	} else {
 		return nil, fmt.Errorf("bad mode: %s", mode)
 	}
-}
-
-func displayProbabilities(probs probabilities.Probabilities, title string) {
-	fmt.Printf("%s / total %d\n", title, probs.TotalCount())
-	valueSize, countSize, ratioSize := getColumnSizes(probs)
-	format := fmt.Sprintf("%%%dd %%%dd %%%d.%df%%%%\n", valueSize, countSize, ratioSize, 4)
-	for val := probs.MinValue(); val <= probs.MaxValue(); val++ {
-		count := probs.ValueCount(val)
-		ratio := probs.ValueProbability(val) * 100
-		fmt.Printf(format, val, count, ratio)
-	}
-}
-
-func getNumberSize[T constraints.Integer](num T) int {
-	return int(math.Ceil(math.Log10(float64(num))))
-}
-
-func getColumnSizes(probs probabilities.Probabilities) (int, int, int) {
-	minValueSize := getNumberSize(probs.MinValue())
-	maxValueSize := getNumberSize(probs.MaxValue())
-	valueSize := 0
-	if minValueSize > valueSize {
-		valueSize = minValueSize
-	}
-	if maxValueSize > valueSize {
-		valueSize = maxValueSize
-	}
-	countSize := getNumberSize(probs.TotalCount())
-	ratioSize := 8
-	return valueSize + 1, countSize + 2, ratioSize
 }
