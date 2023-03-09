@@ -24,6 +24,7 @@ var modes = map[string]_CalcFunc{
 var outputs = map[string]_DisplayFunc{
 	"raw":  displayRaw,
 	"json": displayJson,
+	"svg":  displaySvg,
 }
 
 func main() {
