@@ -1,6 +1,7 @@
 package print_svg
 
 import (
+	_ "embed"
 	"fmt"
 	"html/template"
 	"math"
@@ -31,43 +32,8 @@ const (
 	POINT_SIZE        = 4
 )
 
-const tmplStr = `<svg width="{{ .Size.X }}" height="{{ .Size.Y }}" xmlns="http://www.w3.org/2000/svg">
-	<rect class="border" stroke="{{ .BorderColor }}" stroke-width="1" fill="none" x="0" y="0" width="{{ .Size.X }}" height="{{ .Size.Y }}" />
-	<text
-		x="{{ .Title.Position.X }}" y="{{ .Title.Position.Y }}"
-		fill="{{ .Title.Color }}" font-size="{{ .Title.Size }}"
-		text-anchor="middle" dominant-baseline="middle"
-	>{{ .Title.Text }}</text>
-	<path class="arg-axis" stroke="{{ .ArgAxis.Color }}" stroke-width="1" d="{{ .ArgAxis.Path }}" />
-	<path class="val-axis" stroke="{{ .ValAxis.Color }}" stroke-width="1" d="{{ .ValAxis.Path }}" />
-	<g class="arg-ticks">
-	{{ range .ArgAxis.Ticks }}
-		<path stroke="{{ .Color }}" stroke-width="1" d="{{ .Path }}" />
-	{{ end }}
-	</g>
-	<g class="var-ticks">
-	{{ range .ValAxis.Ticks }}
-		<path stroke="{{ .Color }}" stroke-width="1" d="{{ .Path }}" />
-	{{ end }}
-	</g>
-	<g class="arg-labels">
-	{{ range .ArgAxis.Labels }}
-		<text x="{{ .X }}" y="{{ .Y }}" fill="{{ .Color }}" font-size="{{ .Size }}" text-anchor="middle" dominant-baseline="hanging">{{ .Text }}</text>
-	{{ end }}
-	</g>
-	<g class="val-labels">
-	{{ range .ValAxis.Labels }}
-		<text x="{{ .X }}" y="{{ .Y }}" fill="{{ .Color }}" font-size="{{ .Size }}" text-anchor="end" dominant-baseline="middle">{{ .Text }}</text>
-	{{ end }}
-	</g>
-	<g class="data">
-	{{ range .DataItems }}
-		<circle cx="{{ .X }}" cy="{{ .Y }}" r="{{ .Size }}" fill="{{ .Color }}">
-			<title>{{ .Text }}</title>
-		</circle>
-	{{ end }}
-	</g>
-</svg>`
+//go:embed template.svg
+var tmplStr string
 
 var tmpl = template.Must(template.New("svg").Parse(tmplStr))
 
