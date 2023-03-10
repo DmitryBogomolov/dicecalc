@@ -1,4 +1,4 @@
-package main
+package print_svg
 
 import (
 	"fmt"
@@ -115,7 +115,7 @@ type _DataItem struct {
 	Probability float64
 }
 
-func displaySvg(probs probabilities.Probabilities, title string) string {
+func Print(probs probabilities.Probabilities, title string) string {
 	var builder strings.Builder
 	data := makeTemplateData(probs, title)
 	tmpl.Execute(&builder, data)

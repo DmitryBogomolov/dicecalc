@@ -1,4 +1,4 @@
-package main
+package print_raw
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-func displayRaw(probs probabilities.Probabilities, title string) string {
+func Print(probs probabilities.Probabilities, title string) string {
 	var builder strings.Builder
 	builder.WriteString(fmt.Sprintf("%s / total %d\n", title, probs.TotalCount()))
 	valueSize, countSize, ratioSize := getColumnSizes(probs)

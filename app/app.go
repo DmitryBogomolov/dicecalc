@@ -7,6 +7,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/DmitryBogomolov/dicecalc/app/print_json"
+	"github.com/DmitryBogomolov/dicecalc/app/print_raw"
+	"github.com/DmitryBogomolov/dicecalc/app/print_svg"
 	"github.com/DmitryBogomolov/dicecalc/minmax_dice"
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 	"github.com/DmitryBogomolov/dicecalc/sum_dice"
@@ -22,9 +25,9 @@ var modes = map[string]_CalcFunc{
 }
 
 var outputs = map[string]_DisplayFunc{
-	"raw":  displayRaw,
-	"json": displayJson,
-	"svg":  displaySvg,
+	"raw":  print_raw.Print,
+	"json": print_json.Print,
+	"svg":  print_svg.Print,
 }
 
 func main() {
@@ -93,6 +96,6 @@ func parseOutput(output string) _DisplayFunc {
 	if fn, has := outputs[output]; has {
 		return fn
 	} else {
-		return displayRaw
+		return print_raw.Print
 	}
 }

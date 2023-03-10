@@ -1,4 +1,4 @@
-package main
+package print_json
 
 import (
 	"encoding/json"
@@ -18,7 +18,7 @@ type _JsonItem struct {
 	Probability float64 `json:"probability"`
 }
 
-func displayJson(probs probabilities.Probabilities, title string) string {
+func Print(probs probabilities.Probabilities, title string) string {
 	var obj _JsonObject
 	obj.Title = title
 	obj.Total = probs.TotalCount()
