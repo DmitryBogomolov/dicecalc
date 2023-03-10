@@ -33,7 +33,7 @@ var outputs = map[string]_DisplayFunc{
 func main() {
 	modeVar := flag.String("mode", "", "operation")
 	schemaVar := flag.String("schema", "", "roll schema")
-	outputVar := flag.String("output", "", "output format")
+	outputVar := flag.String("output", "raw", "output format")
 	flag.Parse()
 	if len(os.Args) < 2 {
 		flag.Usage()
@@ -58,7 +58,11 @@ func main() {
 		return
 	}
 
-	displayFn := parseOutput(*outputVar)
+	var displayFn _DisplayFunc
+	if displayFn, err = parseOutput(*outputVar); err != nil {
+		fmt.Println(err)
+		return
+	}
 	title := fmt.Sprintf("Probabilities of %s (%s) rolls", *schemaVar, *modeVar)
 	fmt.Println(displayFn(probs, title))
 }
@@ -92,10 +96,10 @@ func parseMode(mode string) (_CalcFunc, error) {
 	}
 }
 
-func parseOutput(output string) _DisplayFunc {
+func parseOutput(output string) (_DisplayFunc, error) {
 	if fn, has := outputs[output]; has {
-		return fn
+		return fn, nil
 	} else {
-		return print_raw.Print
+		return nil, fmt.Errorf("bad output: %s", output)
 	}
 }
