@@ -1,17 +1,24 @@
 package probabilities
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 type _Probabilities struct {
-	min   int
-	max   int
-	total uint64
-	items []int
+	minValue       int
+	maxValue       int
+	minProbability float64
+	maxProbability float64
+	total          uint64
+	items          []int
 }
 
 type Probabilities interface {
 	MinValue() int
 	MaxValue() int
+	MinProbability() float64
+	MaxProbability() float64
 	TotalCount() uint64
 	ValuesCount() int
 	ValueCount(value int) int
@@ -26,26 +33,45 @@ func NewProbabilities(minValue int, maxValue int, totalVariants uint64, valuesVa
 		return nil, fmt.Errorf("bad variants - length should be %d", maxValue-minValue+1)
 	}
 	check := uint64(0)
+	minVariant := uint64(math.MaxUint64)
+	maxVariant := uint64(0)
 	for _, valueVariants := range valuesVariants {
-		check += uint64(valueVariants)
+		variant := uint64(valueVariants)
+		check += variant
+		if variant < minVariant {
+			minVariant = variant
+		}
+		if variant > maxVariant {
+			maxVariant = variant
+		}
 	}
 	if check != totalVariants {
 		return nil, fmt.Errorf("bad total %d - should be %d)", check, totalVariants)
 	}
 	return &_Probabilities{
-		min:   minValue,
-		max:   maxValue,
-		total: totalVariants,
-		items: valuesVariants,
+		minValue:       minValue,
+		maxValue:       maxValue,
+		minProbability: float64(minVariant) / float64(totalVariants),
+		maxProbability: float64(maxVariant) / float64(totalVariants),
+		total:          totalVariants,
+		items:          valuesVariants,
 	}, nil
 }
 
 func (target *_Probabilities) MinValue() int {
-	return target.min
+	return target.minValue
 }
 
 func (target *_Probabilities) MaxValue() int {
-	return target.max
+	return target.maxValue
+}
+
+func (target *_Probabilities) MinProbability() float64 {
+	return target.minProbability
+}
+
+func (target *_Probabilities) MaxProbability() float64 {
+	return target.maxProbability
 }
 
 func (target *_Probabilities) TotalCount() uint64 {
@@ -57,8 +83,8 @@ func (target *_Probabilities) ValuesCount() int {
 }
 
 func (target *_Probabilities) ValueCount(value int) int {
-	if target.min <= value && value <= target.max {
-		return target.items[value-target.min]
+	if target.minValue <= value && value <= target.maxValue {
+		return target.items[value-target.minValue]
 	}
 	return 0
 }
