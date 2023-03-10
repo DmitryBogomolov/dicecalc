@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/DmitryBogomolov/dicecalc/app/print_html"
 	"github.com/DmitryBogomolov/dicecalc/app/print_json"
 	"github.com/DmitryBogomolov/dicecalc/app/print_raw"
 	"github.com/DmitryBogomolov/dicecalc/app/print_svg"
@@ -28,6 +29,7 @@ var outputs = map[string]_DisplayFunc{
 	"raw":  print_raw.Print,
 	"json": print_json.Print,
 	"svg":  print_svg.Print,
+	"html": print_html.Print,
 }
 
 func main() {
