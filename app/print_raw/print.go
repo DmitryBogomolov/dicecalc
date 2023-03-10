@@ -11,11 +11,11 @@ import (
 
 func Print(probs probabilities.Probabilities, title string) string {
 	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("%s / total %d\n", title, probs.TotalCount()))
+	builder.WriteString(fmt.Sprintf("%s / total %d\n", title, probs.VariantsCount()))
 	valueSize, countSize, ratioSize := getColumnSizes(probs)
 	format := fmt.Sprintf("%%%dd %%%dd %%%d.%df%%%%\n", valueSize, countSize, ratioSize, 4)
 	for val := probs.MinValue(); val <= probs.MaxValue(); val++ {
-		count := probs.ValueCount(val)
+		count := probs.ValueVariants(val)
 		ratio := probs.ValueProbability(val) * 100
 		builder.WriteString(fmt.Sprintf(format, val, count, ratio))
 	}
@@ -36,7 +36,7 @@ func getColumnSizes(probs probabilities.Probabilities) (int, int, int) {
 	if maxValueSize > valueSize {
 		valueSize = maxValueSize
 	}
-	countSize := getNumberSize(probs.TotalCount())
+	countSize := getNumberSize(probs.VariantsCount())
 	ratioSize := 8
 	return valueSize + 1, countSize + 2, ratioSize
 }

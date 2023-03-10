@@ -19,9 +19,9 @@ type Probabilities interface {
 	MaxValue() int
 	MinProbability() float64
 	MaxProbability() float64
-	TotalCount() uint64
+	VariantsCount() uint64
 	ValuesCount() int
-	ValueCount(value int) int
+	ValueVariants(value int) int
 	ValueProbability(value int) float64
 }
 
@@ -74,7 +74,7 @@ func (target *_Probabilities) MaxProbability() float64 {
 	return target.maxProbability
 }
 
-func (target *_Probabilities) TotalCount() uint64 {
+func (target *_Probabilities) VariantsCount() uint64 {
 	return target.total
 }
 
@@ -82,7 +82,7 @@ func (target *_Probabilities) ValuesCount() int {
 	return len(target.items)
 }
 
-func (target *_Probabilities) ValueCount(value int) int {
+func (target *_Probabilities) ValueVariants(value int) int {
 	if target.minValue <= value && value <= target.maxValue {
 		return target.items[value-target.minValue]
 	}
@@ -90,5 +90,5 @@ func (target *_Probabilities) ValueCount(value int) int {
 }
 
 func (target *_Probabilities) ValueProbability(value int) float64 {
-	return float64(target.ValueCount(value)) / float64(target.total)
+	return float64(target.ValueVariants(value)) / float64(target.total)
 }
