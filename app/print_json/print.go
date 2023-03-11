@@ -21,7 +21,7 @@ type _JsonItem struct {
 func Print(probs probabilities.Probabilities, title string) string {
 	var obj _JsonObject
 	obj.Title = title
-	obj.Total = probs.VariantsCount()
+	obj.Total = probs.TotalVariants()
 	var items []_JsonItem
 	for val := probs.MinValue(); val <= probs.MaxValue(); val++ {
 		var item _JsonItem

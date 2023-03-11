@@ -36,7 +36,7 @@ func getColumnSizes(probs probabilities.Probabilities) (int, int, int) {
 	if maxValueSize > valueSize {
 		valueSize = maxValueSize
 	}
-	countSize := getNumberSize(probs.VariantsCount())
+	countSize := getNumberSize(probs.TotalVariants())
 	ratioSize := 8
 	return valueSize + 1, countSize + 2, ratioSize
 }

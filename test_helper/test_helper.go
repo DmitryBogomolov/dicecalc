@@ -51,7 +51,7 @@ func advanceRoll(dices []int, diceSides int) {
 }
 
 func extractValues(probs probabilities.Probabilities) []int {
-	values := make([]int, probs.ValuesCount())
+	values := make([]int, probs.Count())
 	for i := range values {
 		values[i] = probs.ValueVariants(probs.MinValue() + i)
 	}
@@ -61,7 +61,7 @@ func extractValues(probs probabilities.Probabilities) []int {
 func CheckProbabilities(t *testing.T, expected, actual probabilities.Probabilities) {
 	assert.Equal(t, expected.MinValue(), actual.MinValue())
 	assert.Equal(t, expected.MaxValue(), actual.MaxValue())
-	assert.Equal(t, expected.VariantsCount(), actual.VariantsCount())
-	assert.Equal(t, expected.ValuesCount(), actual.ValuesCount())
+	assert.Equal(t, expected.TotalVariants(), actual.TotalVariants())
+	assert.Equal(t, expected.Count(), actual.Count())
 	assert.Equal(t, extractValues(expected), extractValues(actual))
 }

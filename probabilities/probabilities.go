@@ -10,8 +10,8 @@ type _Probabilities struct {
 	maxValue       int
 	minProbability float64
 	maxProbability float64
-	total          uint64
-	items          []int
+	totalVariants  uint64
+	variants       []int
 }
 
 type Probabilities interface {
@@ -19,8 +19,8 @@ type Probabilities interface {
 	MaxValue() int
 	MinProbability() float64
 	MaxProbability() float64
-	VariantsCount() uint64
-	ValuesCount() int
+	Count() int
+	TotalVariants() uint64
 	ValueVariants(value int) int
 	ValueProbability(value int) float64
 }
@@ -53,8 +53,8 @@ func NewProbabilities(minValue int, maxValue int, totalVariants uint64, valuesVa
 		maxValue:       maxValue,
 		minProbability: float64(minVariant) / float64(totalVariants),
 		maxProbability: float64(maxVariant) / float64(totalVariants),
-		total:          totalVariants,
-		items:          valuesVariants,
+		totalVariants:  totalVariants,
+		variants:       valuesVariants,
 	}, nil
 }
 
@@ -74,21 +74,21 @@ func (target *_Probabilities) MaxProbability() float64 {
 	return target.maxProbability
 }
 
-func (target *_Probabilities) VariantsCount() uint64 {
-	return target.total
+func (target *_Probabilities) TotalVariants() uint64 {
+	return target.totalVariants
 }
 
-func (target *_Probabilities) ValuesCount() int {
-	return len(target.items)
+func (target *_Probabilities) Count() int {
+	return len(target.variants)
 }
 
 func (target *_Probabilities) ValueVariants(value int) int {
 	if target.minValue <= value && value <= target.maxValue {
-		return target.items[value-target.minValue]
+		return target.variants[value-target.minValue]
 	}
 	return 0
 }
 
 func (target *_Probabilities) ValueProbability(value int) float64 {
-	return float64(target.ValueVariants(value)) / float64(target.total)
+	return float64(target.ValueVariants(value)) / float64(target.totalVariants)
 }

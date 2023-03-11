@@ -16,7 +16,7 @@ func TestCalculateProbabilities(t *testing.T) {
 	probabilities, _ := CalculateProbabilities(probabilities.DiceRollParameters{DiceCount: 3, DiceSides: 6})
 	assert.Equal(t, 3, probabilities.MinValue())
 	assert.Equal(t, 18, probabilities.MaxValue())
-	assert.Equal(t, 16, probabilities.ValuesCount())
+	assert.Equal(t, 16, probabilities.Count())
 }
 
 func Test3dX(t *testing.T) {
