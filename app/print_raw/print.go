@@ -11,7 +11,7 @@ import (
 
 func Print(probs probabilities.Probabilities, title string) string {
 	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("%s / total %d\n", title, probs.VariantsCount()))
+	builder.WriteString(title + "\n")
 	valueSize, countSize, ratioSize := getColumnSizes(probs)
 	format := fmt.Sprintf("%%%dd %%%dd %%%d.%df%%%%\n", valueSize, countSize, ratioSize, 4)
 	for val := probs.MinValue(); val <= probs.MaxValue(); val++ {

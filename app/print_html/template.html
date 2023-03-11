@@ -10,13 +10,14 @@
         <thead>
             <tr>
                 <th>value</th>
+                <th>count</th>
                 <th>probability</th>
             </tr>
         </thead>
         <tbody>
             {{ range .Items }}
             <tr>
-                <td>{{ .Value }}</td><td>{{ .Probability }}</td>
+                <td>{{ .Value }}</td><td>{{ .Count }}</td><td>{{ .Probability }}</td>
             </tr>
             {{ end }}
         </tbody>
