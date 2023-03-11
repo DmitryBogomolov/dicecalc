@@ -55,6 +55,23 @@ func Process(mode string, schema string, output string) ([]byte, error) {
 	return []byte(ret), nil
 }
 
+func keys[T any](target map[string]T) []string {
+	var ret []string
+	for key := range target {
+		ret = append(ret, key)
+	}
+	return ret
+
+}
+
+func Modes() []string {
+	return keys(modes)
+}
+
+func Outputs() []string {
+	return keys(outputs)
+}
+
 func parseRollSchema(schema string) (params probabilities.DiceRollParameters, err error) {
 	items := strings.Split(strings.ToLower(schema), "d")
 	if len(items) != 2 {
