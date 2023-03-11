@@ -218,8 +218,8 @@ func collectData(probs probabilities.Probabilities, x1, x2, y1, y2 int) []_DataI
 	minProb := probs.MinProbability()
 	maxProb := probs.MaxProbability()
 	var items []_DataItem
-	for val := minVal; val <= maxVal; val++ {
-		prob := probs.ValueProbability(val)
+	for i := 0; i < probs.Count(); i++ {
+		val, _, prob := probs.Item(i)
 		var item _DataItem
 		item.X = mapValue(float64(val), float64(minVal), float64(maxVal), x1, x2)
 		item.Y = mapValue(prob, minProb, maxProb, y2, y1)

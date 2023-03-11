@@ -51,9 +51,10 @@ func advanceRoll(dices []int, diceSides int) {
 }
 
 func extractValues(probs probabilities.Probabilities) []uint64 {
-	values := make([]uint64, probs.Count())
-	for i := range values {
-		values[i] = probs.ValueVariants(probs.MinValue() + i)
+	var values []uint64
+	for i := 0; i < probs.Count(); i++ {
+		_, val, _ := probs.Item(i)
+		values = append(values, val)
 	}
 	return values
 }

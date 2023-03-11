@@ -29,11 +29,12 @@ func Print(probs probabilities.Probabilities, title string) string {
 	var data _TemplateData
 	data.Title = title
 	var items []_Item
-	for val := probs.MinValue(); val <= probs.MaxValue(); val++ {
+	for i := 0; i < probs.Count(); i++ {
+		val, count, probability := probs.Item(i)
 		var item _Item
 		item.Value = fmt.Sprintf("%d", val)
-		item.Count = fmt.Sprintf("%d", probs.ValueVariants(val))
-		item.Probability = fmt.Sprintf("%.2f%%", probs.ValueProbability(val)*100)
+		item.Count = fmt.Sprintf("%d", count)
+		item.Probability = fmt.Sprintf("%.2f%%", probability*100)
 		items = append(items, item)
 	}
 	data.Items = items

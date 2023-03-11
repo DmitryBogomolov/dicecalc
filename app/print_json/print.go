@@ -23,11 +23,12 @@ func Print(probs probabilities.Probabilities, title string) string {
 	obj.Title = title
 	obj.Total = probs.TotalVariants()
 	var items []_JsonItem
-	for val := probs.MinValue(); val <= probs.MaxValue(); val++ {
+	for i := 0; i < probs.Count(); i++ {
+		val, count, probability := probs.Item(i)
 		var item _JsonItem
 		item.Value = val
-		item.Count = probs.ValueVariants(val)
-		item.Probability = probs.ValueProbability(val)
+		item.Count = count
+		item.Probability = probability
 		items = append(items, item)
 	}
 	obj.Values = items

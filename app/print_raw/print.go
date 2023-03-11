@@ -14,10 +14,9 @@ func Print(probs probabilities.Probabilities, title string) string {
 	builder.WriteString(title + "\n")
 	valueSize, countSize, ratioSize := getColumnSizes(probs)
 	format := fmt.Sprintf("%%%dd %%%dd %%%d.%df%%%%\n", valueSize, countSize, ratioSize, 4)
-	for val := probs.MinValue(); val <= probs.MaxValue(); val++ {
-		count := probs.ValueVariants(val)
-		ratio := probs.ValueProbability(val) * 100
-		builder.WriteString(fmt.Sprintf(format, val, count, ratio))
+	for i := 0; i < probs.Count(); i++ {
+		val, count, probability := probs.Item(i)
+		builder.WriteString(fmt.Sprintf(format, val, count, probability*100))
 	}
 	return builder.String()
 }
