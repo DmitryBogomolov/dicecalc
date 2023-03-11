@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/DmitryBogomolov/dicecalc/app/print_json"
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
+	"github.com/DmitryBogomolov/dicecalc/wrapper/print_json"
 	"github.com/stretchr/testify/assert"
 )
 

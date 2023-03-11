@@ -3,8 +3,8 @@ package print_raw_test
 import (
 	"testing"
 
-	"github.com/DmitryBogomolov/dicecalc/app/print_raw"
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
+	"github.com/DmitryBogomolov/dicecalc/wrapper/print_raw"
 	"github.com/stretchr/testify/assert"
 )
 
