@@ -1,20 +1,27 @@
 package probabilities
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 type _Probabilities struct {
-	min   int
-	max   int
-	total uint64
-	items []int
+	minValue       int
+	maxValue       int
+	minProbability float64
+	maxProbability float64
+	totalVariants  uint64
+	variants       []int
 }
 
 type Probabilities interface {
 	MinValue() int
 	MaxValue() int
-	TotalCount() uint64
-	ValuesCount() int
-	ValueCount(value int) int
+	MinProbability() float64
+	MaxProbability() float64
+	Count() int
+	TotalVariants() uint64
+	ValueVariants(value int) int
 	ValueProbability(value int) float64
 }
 
@@ -26,43 +33,62 @@ func NewProbabilities(minValue int, maxValue int, totalVariants uint64, valuesVa
 		return nil, fmt.Errorf("bad variants - length should be %d", maxValue-minValue+1)
 	}
 	check := uint64(0)
+	minVariant := uint64(math.MaxUint64)
+	maxVariant := uint64(0)
 	for _, valueVariants := range valuesVariants {
-		check += uint64(valueVariants)
+		variant := uint64(valueVariants)
+		check += variant
+		if variant < minVariant {
+			minVariant = variant
+		}
+		if variant > maxVariant {
+			maxVariant = variant
+		}
 	}
 	if check != totalVariants {
 		return nil, fmt.Errorf("bad total %d - should be %d)", check, totalVariants)
 	}
 	return &_Probabilities{
-		min:   minValue,
-		max:   maxValue,
-		total: totalVariants,
-		items: valuesVariants,
+		minValue:       minValue,
+		maxValue:       maxValue,
+		minProbability: float64(minVariant) / float64(totalVariants),
+		maxProbability: float64(maxVariant) / float64(totalVariants),
+		totalVariants:  totalVariants,
+		variants:       valuesVariants,
 	}, nil
 }
 
 func (target *_Probabilities) MinValue() int {
-	return target.min
+	return target.minValue
 }
 
 func (target *_Probabilities) MaxValue() int {
-	return target.max
+	return target.maxValue
 }
 
-func (target *_Probabilities) TotalCount() uint64 {
-	return target.total
+func (target *_Probabilities) MinProbability() float64 {
+	return target.minProbability
 }
 
-func (target *_Probabilities) ValuesCount() int {
-	return len(target.items)
+func (target *_Probabilities) MaxProbability() float64 {
+	return target.maxProbability
 }
 
-func (target *_Probabilities) ValueCount(value int) int {
-	if target.min <= value && value <= target.max {
-		return target.items[value-target.min]
+func (target *_Probabilities) TotalVariants() uint64 {
+	return target.totalVariants
+}
+
+func (target *_Probabilities) Count() int {
+	return len(target.variants)
+}
+
+func (target *_Probabilities) ValueVariants(value int) int {
+	if target.minValue <= value && value <= target.maxValue {
+		return target.variants[value-target.minValue]
 	}
 	return 0
 }
 
 func (target *_Probabilities) ValueProbability(value int) float64 {
-	return float64(target.ValueCount(value)) / float64(target.total)
+	return float64(target.ValueVariants(value)) / float64(target.totalVariants)
 }
