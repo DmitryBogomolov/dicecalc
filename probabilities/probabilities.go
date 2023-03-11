@@ -11,7 +11,7 @@ type _Probabilities struct {
 	minProbability float64
 	maxProbability float64
 	totalVariants  uint64
-	variants       []int
+	variants       []uint64
 }
 
 type Probabilities interface {
@@ -21,11 +21,11 @@ type Probabilities interface {
 	MaxProbability() float64
 	Count() int
 	TotalVariants() uint64
-	ValueVariants(value int) int
+	ValueVariants(value int) uint64
 	ValueProbability(value int) float64
 }
 
-func NewProbabilities(minValue int, maxValue int, totalVariants uint64, valuesVariants []int) (Probabilities, error) {
+func NewProbabilities(minValue int, maxValue int, totalVariants uint64, valuesVariants []uint64) (Probabilities, error) {
 	if minValue > maxValue {
 		return nil, fmt.Errorf("bad value range: %d..%d", minValue, maxValue)
 	}
@@ -82,7 +82,7 @@ func (target *_Probabilities) Count() int {
 	return len(target.variants)
 }
 
-func (target *_Probabilities) ValueVariants(value int) int {
+func (target *_Probabilities) ValueVariants(value int) uint64 {
 	if target.minValue <= value && value <= target.maxValue {
 		return target.variants[value-target.minValue]
 	}

@@ -31,7 +31,7 @@ func CalculateMaxProbabilities(params probabilities.DiceRollParameters) (probabi
 	minVal := 1
 	maxVal := params.DiceSides
 	count := maxVal - minVal + 1
-	variants := make([]int, count)
+	variants := make([]uint64, count)
 	fillVariants(variants, params.DiceCount, params.DiceSides)
 	return probabilities.NewProbabilities(minVal, maxVal, uint64(total), variants)
 }
@@ -60,22 +60,22 @@ func CalculateMinProbabilities(params probabilities.DiceRollParameters) (probabi
 	minVal := 1
 	maxVal := params.DiceSides
 	count := maxVal - minVal + 1
-	variants := make([]int, count)
+	variants := make([]uint64, count)
 	fillVariants(variants, params.DiceCount, params.DiceSides)
 	reverse(variants)
 	return probabilities.NewProbabilities(minVal, maxVal, uint64(total), variants)
 }
 
-func fillVariants(variants []int, diceCount int, diceSides int) {
+func fillVariants(variants []uint64, diceCount int, diceSides int) {
 	prevCount := uint64(0)
 	for i := 0; i < len(variants); i++ {
 		currCount := uint64(math.Pow(float64(i+1), float64(diceCount)))
-		variants[i] = int(currCount - prevCount)
+		variants[i] = currCount - prevCount
 		prevCount = currCount
 	}
 }
 
-func reverse(variants []int) {
+func reverse[T any](variants []T) {
 	i, j := 0, len(variants)-1
 	for i < j {
 		variants[i], variants[j] = variants[j], variants[i]

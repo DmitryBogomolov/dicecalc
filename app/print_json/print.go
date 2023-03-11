@@ -14,7 +14,7 @@ type _JsonObject struct {
 
 type _JsonItem struct {
 	Value       int     `json:"value"`
-	Count       int     `json:"count"`
+	Count       uint64  `json:"count"`
 	Probability float64 `json:"probability"`
 }
 

@@ -15,7 +15,7 @@ func CollectTestData(params probabilities.DiceRollParameters, measureRoll func([
 		dices[i] = 1
 	}
 	total := uint64(math.Pow(float64(params.DiceSides), float64(params.DiceCount)))
-	index := make(map[int]int)
+	index := make(map[int]uint64)
 	for i := uint64(0); i < total; i++ {
 		value := measureRoll(dices)
 		advanceRoll(dices, params.DiceSides)
@@ -31,7 +31,7 @@ func CollectTestData(params probabilities.DiceRollParameters, measureRoll func([
 			maxValue = key
 		}
 	}
-	values := make([]int, maxValue-minValue+1)
+	values := make([]uint64, maxValue-minValue+1)
 	for key, val := range index {
 		values[key-minValue] = val
 	}
@@ -50,8 +50,8 @@ func advanceRoll(dices []int, diceSides int) {
 	}
 }
 
-func extractValues(probs probabilities.Probabilities) []int {
-	values := make([]int, probs.Count())
+func extractValues(probs probabilities.Probabilities) []uint64 {
+	values := make([]uint64, probs.Count())
 	for i := range values {
 		values[i] = probs.ValueVariants(probs.MinValue() + i)
 	}
