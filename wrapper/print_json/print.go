@@ -18,7 +18,7 @@ type _JsonItem struct {
 	Probability float64 `json:"probability"`
 }
 
-func Print(probs probabilities.Probabilities, title string) string {
+func Print(probs probabilities.Probabilities, title string) []byte {
 	var obj _JsonObject
 	obj.Title = title
 	obj.Total = probs.TotalVariants()
@@ -33,5 +33,5 @@ func Print(probs probabilities.Probabilities, title string) string {
 	}
 	obj.Values = items
 	ret, _ := json.MarshalIndent(obj, "", "  ")
-	return string(ret)
+	return ret
 }

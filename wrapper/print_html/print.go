@@ -24,7 +24,7 @@ type _Item struct {
 	Probability string
 }
 
-func Print(probs probabilities.Probabilities, title string) string {
+func Print(probs probabilities.Probabilities, title string) []byte {
 	var builder strings.Builder
 	var data _TemplateData
 	data.Title = title
@@ -39,5 +39,5 @@ func Print(probs probabilities.Probabilities, title string) string {
 	}
 	data.Items = items
 	tmpl.Execute(&builder, data)
-	return builder.String()
+	return []byte(builder.String())
 }

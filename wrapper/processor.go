@@ -15,7 +15,7 @@ import (
 )
 
 type _CalcFunc func(probabilities.DiceRollParameters) (probabilities.Probabilities, error)
-type _DisplayFunc func(probabilities.Probabilities, string) string
+type _DisplayFunc func(probabilities.Probabilities, string) []byte
 
 var modes = map[string]_CalcFunc{
 	"sum": sum_dice.CalculateProbabilities,
@@ -52,7 +52,7 @@ func Process(mode string, schema string, output string) ([]byte, error) {
 	}
 	title := fmt.Sprintf("Probabilities of %s (%s) rolls", schema, mode)
 	ret := displayFn(probs, title)
-	return []byte(ret), nil
+	return ret, nil
 }
 
 func keys[T any](target map[string]T) []string {

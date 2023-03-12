@@ -81,11 +81,11 @@ type _DataItem struct {
 	Probability float64
 }
 
-func Print(probs probabilities.Probabilities, title string) string {
+func Print(probs probabilities.Probabilities, title string) []byte {
 	var builder strings.Builder
 	data := makeTemplateData(probs, title)
 	tmpl.Execute(&builder, data)
-	return builder.String()
+	return []byte(builder.String())
 }
 
 func makeTemplateData(probs probabilities.Probabilities, title string) _TemplateData {

@@ -12,6 +12,6 @@ import (
 func TestPrint(t *testing.T) {
 	probs, _ := probabilities.NewProbabilities(2, 5, 7, []uint64{1, 2, 3, 1})
 	ret := print_svg.Print(probs, "Hello World")
-	assert.Contains(t, ret, ">Hello World</text>")
-	assert.Equal(t, strings.Count(ret, "<circle"), 4)
+	assert.Contains(t, string(ret), ">Hello World</text>")
+	assert.Equal(t, strings.Count(string(ret), "<circle"), 4)
 }

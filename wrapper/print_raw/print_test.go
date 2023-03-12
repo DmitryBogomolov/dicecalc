@@ -11,5 +11,9 @@ import (
 func TestPrint(t *testing.T) {
 	probs, _ := probabilities.NewProbabilities(2, 5, 7, []uint64{1, 2, 3, 1})
 	ret := print_raw.Print(probs, "Hello World")
-	assert.Equal(t, "Hello World\n 2   1  14.2857%\n 3   2  28.5714%\n 4   3  42.8571%\n 5   1  14.2857%\n", ret)
+	assert.Equal(
+		t,
+		[]byte("Hello World\n 2   1  14.2857%\n 3   2  28.5714%\n 4   3  42.8571%\n 5   1  14.2857%\n"),
+		ret,
+	)
 }
