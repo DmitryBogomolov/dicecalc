@@ -34,6 +34,9 @@
         </div>
         <button id="calculate-button" type="button" class="btn btn-primary">Calculate</button>
     </div>
+    <div class="embed-responsive embed-responsive-21by9">
+        <iframe id="result-frame" class="embed-responsive-item"></iframe>
+    </div>
     <script>
         document.querySelector('#dice-count-input').addEventListener('input', (e) => {
             document.querySelector('#dice-count-text').textContent = e.target.value;
@@ -46,6 +49,8 @@
             const output = document.querySelector('#output-input').value;
             const diceCount = document.querySelector('#dice-count-input').value;
             const diseSides = document.querySelector('#dice-sides-input').value;
+            const query = `/calculate?mode=${mode}&output=${output}&schema=${diceCount}d${diseSides}`;
+            document.querySelector('#result-frame').src = query;
         });
     </script>
 </body>
