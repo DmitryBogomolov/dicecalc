@@ -4,14 +4,18 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/DmitryBogomolov/dicecalc/wrapper"
 )
 
 func main() {
-	modeVar := flag.String("mode", "", "operation")
-	schemaVar := flag.String("schema", "", "roll schema")
-	outputVar := flag.String("output", "raw", "output format")
+	modes := wrapper.Modes()
+	outputs := wrapper.Outputs()
+
+	modeVar := flag.String("mode", "", fmt.Sprintf("mode [%s]", strings.Join(modes, " | ")))
+	schemaVar := flag.String("schema", "", "roll schema MdN [1d4, 2d6, 3d8, ...]")
+	outputVar := flag.String("output", outputs[0], fmt.Sprintf("output format [%s]", strings.Join(outputs, " | ")))
 	flag.Parse()
 	if len(os.Args) < 2 {
 		flag.Usage()
