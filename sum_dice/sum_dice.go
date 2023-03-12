@@ -31,7 +31,7 @@ func CalculateProbabilities(params probabilities.DiceRollParameters) (probabilit
 	minVal := params.DiceCount
 	maxVal := params.DiceCount * params.DiceSides
 	count := maxVal - minVal + 1
-	variants := make([]int, count)
+	variants := make([]uint64, count)
 	// For a single dice there is no need for any calculations.
 	if params.DiceCount == 1 {
 		fillSimpleVariants(variants)
@@ -49,13 +49,13 @@ func CalculateProbabilities(params probabilities.DiceRollParameters) (probabilit
 	return probabilities.NewProbabilities(minVal, maxVal, uint64(total), variants)
 }
 
-func fillSimpleVariants(variants []int) {
+func fillSimpleVariants(variants []uint64) {
 	for i := range variants {
 		variants[i] = 1
 	}
 }
 
-func fillVariants(variants []int, count int, diceCount int, diceSides int) {
+func fillVariants(variants []uint64, count int, diceCount int, diceSides int) {
 	// Precalculate small cube volume steps and make slots to keep track of small cubes filling.
 	volDiffs, volCounts := prepareDiffsAndCounts(diceCount)
 	prevVolume := 0.0
@@ -73,9 +73,9 @@ func fillVariants(variants []int, count int, diceCount int, diceSides int) {
 	}
 }
 
-func prepareDiffsAndCounts(diceCount int) ([]float64, []int) {
+func prepareDiffsAndCounts(diceCount int) ([]float64, []uint64) {
 	volDiffs := make([]float64, diceCount)
-	volCounts := make([]int, diceCount-1)
+	volCounts := make([]uint64, diceCount-1)
 	volDiffs[0] = 1
 	for i := 1; i < diceCount; i++ {
 		volDiffs[i] = getHyperVolume(float64(diceCount-i), diceCount)
@@ -86,7 +86,7 @@ func prepareDiffsAndCounts(diceCount int) ([]float64, []int) {
 	return volDiffs, volCounts
 }
 
-func distributeVolume(volume float64, volDiffs []float64, volCounts []int) int {
+func distributeVolume(volume float64, volDiffs []float64, volCounts []uint64) uint64 {
 	rest := volume
 	for i, cnt := range volCounts {
 		if cnt > 0 {
@@ -98,12 +98,12 @@ func distributeVolume(volume float64, volDiffs []float64, volCounts []int) int {
 		}
 	}
 	ratio := rest / volDiffs[len(volDiffs)-1]
-	k := int(math.Round(ratio))
+	k := uint64(math.Round(ratio))
 	volCounts[len(volCounts)-1] = k
 	return k
 }
 
-func fillSymmetricVariants(variants []int, half int) {
+func fillSymmetricVariants(variants []uint64, half int) {
 	count := len(variants)
 	for i := count - 1; i >= half; i-- {
 		variants[i] = variants[count-i-1]

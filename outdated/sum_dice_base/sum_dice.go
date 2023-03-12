@@ -7,7 +7,7 @@ import (
 
 func CalculateProbabilities(
 	params probabilities.DiceRollParameters,
-	calculateValues func(int, *dice_roller.DiceRoller) []int,
+	calculateValues func(int, *dice_roller.DiceRoller) []uint64,
 ) (probabilities.Probabilities, error) {
 	roller, err := dice_roller.NewRoller(params)
 	if err != nil {
@@ -16,7 +16,7 @@ func CalculateProbabilities(
 	min := params.DiceCount
 	max := params.DiceCount * params.DiceSides
 	len := max - min + 1
-	values := make([]int, len)
+	values := make([]uint64, len)
 	half := len >> 1
 	vals := calculateValues((half + 1), roller)
 	copy(values, vals)

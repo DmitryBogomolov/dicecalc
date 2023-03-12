@@ -4,104 +4,27 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 
-	"github.com/DmitryBogomolov/dicecalc/app/print_html"
-	"github.com/DmitryBogomolov/dicecalc/app/print_json"
-	"github.com/DmitryBogomolov/dicecalc/app/print_raw"
-	"github.com/DmitryBogomolov/dicecalc/app/print_svg"
-	"github.com/DmitryBogomolov/dicecalc/minmax_dice"
-	"github.com/DmitryBogomolov/dicecalc/probabilities"
-	"github.com/DmitryBogomolov/dicecalc/sum_dice"
+	"github.com/DmitryBogomolov/dicecalc/wrapper"
 )
 
-type _CalcFunc func(probabilities.DiceRollParameters) (probabilities.Probabilities, error)
-type _DisplayFunc func(probabilities.Probabilities, string) string
-
-var modes = map[string]_CalcFunc{
-	"sum": sum_dice.CalculateProbabilities,
-	"min": minmax_dice.CalculateMinProbabilities,
-	"max": minmax_dice.CalculateMaxProbabilities,
-}
-
-var outputs = map[string]_DisplayFunc{
-	"raw":  print_raw.Print,
-	"json": print_json.Print,
-	"svg":  print_svg.Print,
-	"html": print_html.Print,
-}
-
 func main() {
-	modeVar := flag.String("mode", "", "operation")
-	schemaVar := flag.String("schema", "", "roll schema")
-	outputVar := flag.String("output", "raw", "output format")
+	modes := wrapper.Modes()
+	outputs := wrapper.Outputs()
+
+	modeVar := flag.String("mode", "", fmt.Sprintf("mode [%s]", strings.Join(modes, " | ")))
+	schemaVar := flag.String("schema", "", "roll schema MdN [1d4, 2d6, 3d8, ...]")
+	outputVar := flag.String("output", outputs[0], fmt.Sprintf("output format [%s]", strings.Join(outputs, " | ")))
 	flag.Parse()
 	if len(os.Args) < 2 {
 		flag.Usage()
 		return
 	}
 
-	var calcFn _CalcFunc
-	var params probabilities.DiceRollParameters
-	var err error
-	if calcFn, err = parseMode(*modeVar); err != nil {
+	if ret, err := wrapper.Process(*modeVar, *schemaVar, *outputVar); err != nil {
 		fmt.Println(err)
-		return
-	}
-	if params, err = parseRollSchema(*schemaVar); err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	var probs probabilities.Probabilities
-	if probs, err = calcFn(params); err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	var displayFn _DisplayFunc
-	if displayFn, err = parseOutput(*outputVar); err != nil {
-		fmt.Println(err)
-		return
-	}
-	title := fmt.Sprintf("Probabilities of %s (%s) rolls", *schemaVar, *modeVar)
-	fmt.Println(displayFn(probs, title))
-}
-
-func parseRollSchema(schema string) (params probabilities.DiceRollParameters, err error) {
-	items := strings.Split(strings.ToLower(schema), "d")
-	if len(items) != 2 {
-		err = fmt.Errorf("bad schema: %s", schema)
-		return
-	}
-	var diceCount int
-	if diceCount, err = strconv.Atoi(items[0]); err != nil {
-		err = fmt.Errorf("bad schema: %s", schema)
-		return
-	}
-	var diceSides int
-	if diceSides, err = strconv.Atoi(items[1]); err != nil {
-		err = fmt.Errorf("bad schema: %s", schema)
-		return
-	}
-	params.DiceCount = diceCount
-	params.DiceSides = diceSides
-	return
-}
-
-func parseMode(mode string) (_CalcFunc, error) {
-	if fn, has := modes[mode]; has {
-		return fn, nil
 	} else {
-		return nil, fmt.Errorf("bad mode: %s", mode)
-	}
-}
-
-func parseOutput(output string) (_DisplayFunc, error) {
-	if fn, has := outputs[output]; has {
-		return fn, nil
-	} else {
-		return nil, fmt.Errorf("bad output: %s", output)
+		fmt.Println(string(ret))
 	}
 }

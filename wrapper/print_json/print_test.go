@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/DmitryBogomolov/dicecalc/app/print_json"
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
+	"github.com/DmitryBogomolov/dicecalc/wrapper/print_json"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestPrint(t *testing.T) {
-	probs, _ := probabilities.NewProbabilities(2, 5, 7, []int{1, 2, 3, 1})
+	probs, _ := probabilities.NewProbabilities(2, 5, 7, []uint64{1, 2, 3, 1})
 	ret := print_json.Print(probs, "Hello World")
 	var obj map[string]any
 	assert.NoError(t, json.Unmarshal([]byte(ret), &obj))

@@ -9,9 +9,9 @@ import (
 )
 
 func CalculateProbabilities(params probabilities.DiceRollParameters) (probabilities.Probabilities, error) {
-	calculateValues := func(k int, roller *dice_roller.DiceRoller) []int {
+	calculateValues := func(k int, roller *dice_roller.DiceRoller) []uint64 {
 		calculate := sum_dice_base.MakeDistinctRollsCalculator(roller)
-		result := make([]int, k)
+		result := make([]uint64, k)
 		min := roller.DiceCount()
 		waigGroup := sync.WaitGroup{}
 		waigGroup.Add(k)

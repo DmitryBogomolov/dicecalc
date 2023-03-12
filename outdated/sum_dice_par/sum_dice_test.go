@@ -5,19 +5,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	. "github.com/DmitryBogomolov/dicecalc/outdated/sum_dice_par"
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 	"github.com/DmitryBogomolov/dicecalc/test_helper"
 )
-
-func TestCalculateProbabilities(t *testing.T) {
-	probabilities, _ := CalculateProbabilities(probabilities.DiceRollParameters{DiceCount: 3, DiceSides: 6})
-	assert.Equal(t, 3, probabilities.MinValue())
-	assert.Equal(t, 18, probabilities.MaxValue())
-	assert.Equal(t, 16, probabilities.Count())
-}
 
 func Test3dX(t *testing.T) {
 	checkProbabilities(t, "3d4")

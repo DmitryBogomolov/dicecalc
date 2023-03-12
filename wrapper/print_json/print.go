@@ -14,23 +14,24 @@ type _JsonObject struct {
 
 type _JsonItem struct {
 	Value       int     `json:"value"`
-	Count       int     `json:"count"`
+	Count       uint64  `json:"count"`
 	Probability float64 `json:"probability"`
 }
 
-func Print(probs probabilities.Probabilities, title string) string {
+func Print(probs probabilities.Probabilities, title string) []byte {
 	var obj _JsonObject
 	obj.Title = title
 	obj.Total = probs.TotalVariants()
 	var items []_JsonItem
-	for val := probs.MinValue(); val <= probs.MaxValue(); val++ {
+	for i := 0; i < probs.Count(); i++ {
+		val, count, probability := probs.Item(i)
 		var item _JsonItem
 		item.Value = val
-		item.Count = probs.ValueVariants(val)
-		item.Probability = probs.ValueProbability(val)
+		item.Count = count
+		item.Probability = probability
 		items = append(items, item)
 	}
 	obj.Values = items
 	ret, _ := json.MarshalIndent(obj, "", "  ")
-	return string(ret)
+	return ret
 }

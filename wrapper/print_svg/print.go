@@ -81,11 +81,11 @@ type _DataItem struct {
 	Probability float64
 }
 
-func Print(probs probabilities.Probabilities, title string) string {
+func Print(probs probabilities.Probabilities, title string) []byte {
 	var builder strings.Builder
 	data := makeTemplateData(probs, title)
 	tmpl.Execute(&builder, data)
-	return builder.String()
+	return []byte(builder.String())
 }
 
 func makeTemplateData(probs probabilities.Probabilities, title string) _TemplateData {
@@ -218,8 +218,8 @@ func collectData(probs probabilities.Probabilities, x1, x2, y1, y2 int) []_DataI
 	minProb := probs.MinProbability()
 	maxProb := probs.MaxProbability()
 	var items []_DataItem
-	for val := minVal; val <= maxVal; val++ {
-		prob := probs.ValueProbability(val)
+	for i := 0; i < probs.Count(); i++ {
+		val, _, prob := probs.Item(i)
 		var item _DataItem
 		item.X = mapValue(float64(val), float64(minVal), float64(maxVal), x1, x2)
 		item.Y = mapValue(prob, minProb, maxProb, y2, y1)

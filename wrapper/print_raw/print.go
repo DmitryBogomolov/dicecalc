@@ -9,17 +9,16 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-func Print(probs probabilities.Probabilities, title string) string {
+func Print(probs probabilities.Probabilities, title string) []byte {
 	var builder strings.Builder
-	builder.WriteString(title + "\n")
+	fmt.Fprintln(&builder, title)
 	valueSize, countSize, ratioSize := getColumnSizes(probs)
 	format := fmt.Sprintf("%%%dd %%%dd %%%d.%df%%%%\n", valueSize, countSize, ratioSize, 4)
-	for val := probs.MinValue(); val <= probs.MaxValue(); val++ {
-		count := probs.ValueVariants(val)
-		ratio := probs.ValueProbability(val) * 100
-		builder.WriteString(fmt.Sprintf(format, val, count, ratio))
+	for i := 0; i < probs.Count(); i++ {
+		val, count, probability := probs.Item(i)
+		fmt.Fprintf(&builder, format, val, count, probability*100)
 	}
-	return builder.String()
+	return []byte(builder.String())
 }
 
 func getNumberSize[T constraints.Integer](num T) int {
