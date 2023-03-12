@@ -2,6 +2,7 @@ package wrapper
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -60,6 +61,7 @@ func keys[T any](target map[string]T) []string {
 	for key := range target {
 		ret = append(ret, key)
 	}
+	sort.Sort(sort.StringSlice(ret))
 	return ret
 
 }
