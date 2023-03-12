@@ -8,11 +8,11 @@ import (
 )
 
 func TestModes(t *testing.T) {
-	assert.Equal(t, []string{"max", "min", "sum"}, wrapper.Modes())
+	assert.Equal(t, []string{"sum", "min", "max"}, wrapper.Modes())
 }
 
 func TestOutputs(t *testing.T) {
-	assert.Equal(t, []string{"html", "json", "raw", "svg"}, wrapper.Outputs())
+	assert.Equal(t, []string{"raw", "json", "html", "svg"}, wrapper.Outputs())
 }
 
 func TestProcess(t *testing.T) {

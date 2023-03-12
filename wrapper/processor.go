@@ -2,7 +2,6 @@ package wrapper
 
 import (
 	"fmt"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -15,24 +14,50 @@ import (
 	"github.com/DmitryBogomolov/dicecalc/wrapper/print_svg"
 )
 
-type _CalcFunc func(probabilities.DiceRollParameters) (probabilities.Probabilities, error)
-type _DisplayFunc func(probabilities.Probabilities, string) []byte
+type ModeFunc func(probabilities.DiceRollParameters) (probabilities.Probabilities, error)
+type PrintFunc func(probabilities.Probabilities, string) []byte
 
-var modes = map[string]_CalcFunc{
-	"sum": sum_dice.CalculateProbabilities,
-	"min": minmax_dice.CalculateMinProbabilities,
-	"max": minmax_dice.CalculateMaxProbabilities,
+var modeNames []string
+var modesCache = map[string]ModeFunc{}
+
+var outputNames []string
+var outputsCache = map[string]PrintFunc{}
+
+func init() {
+	RegisterMode("sum", sum_dice.CalculateProbabilities)
+	RegisterMode("min", minmax_dice.CalculateMinProbabilities)
+	RegisterMode("max", minmax_dice.CalculateMaxProbabilities)
+
+	RegisterOutput("raw", print_raw.Print)
+	RegisterOutput("json", print_json.Print)
+	RegisterOutput("html", print_html.Print)
+	RegisterOutput("svg", print_svg.Print)
 }
 
-var outputs = map[string]_DisplayFunc{
-	"raw":  print_raw.Print,
-	"json": print_json.Print,
-	"svg":  print_svg.Print,
-	"html": print_html.Print,
+func RegisterMode(mode string, fn ModeFunc) {
+	if _, has := modesCache[mode]; has {
+		panic(fmt.Sprintf("mode %s is already registered", mode))
+	}
+	if fn == nil {
+		panic("fn is nil")
+	}
+	modeNames = append(modeNames, mode)
+	modesCache[mode] = fn
+}
+
+func RegisterOutput(output string, fn PrintFunc) {
+	if _, has := outputsCache[output]; has {
+		panic(fmt.Sprintf("output %s is already registered", output))
+	}
+	if fn == nil {
+		panic("fn is nil")
+	}
+	outputNames = append(outputNames, output)
+	outputsCache[output] = fn
 }
 
 func Process(mode string, schema string, output string) ([]byte, error) {
-	var calcFn _CalcFunc
+	var calcFn ModeFunc
 	var params probabilities.DiceRollParameters
 	var err error
 	if calcFn, err = parseMode(mode); err != nil {
@@ -47,7 +72,7 @@ func Process(mode string, schema string, output string) ([]byte, error) {
 		return nil, err
 	}
 
-	var displayFn _DisplayFunc
+	var displayFn PrintFunc
 	if displayFn, err = parseOutput(output); err != nil {
 		return nil, err
 	}
@@ -56,22 +81,12 @@ func Process(mode string, schema string, output string) ([]byte, error) {
 	return ret, nil
 }
 
-func keys[T any](target map[string]T) []string {
-	var ret []string
-	for key := range target {
-		ret = append(ret, key)
-	}
-	sort.Sort(sort.StringSlice(ret))
-	return ret
-
-}
-
 func Modes() []string {
-	return keys(modes)
+	return append([]string(nil), modeNames...)
 }
 
 func Outputs() []string {
-	return keys(outputs)
+	return append([]string(nil), outputNames...)
 }
 
 func parseRollSchema(schema string) (params probabilities.DiceRollParameters, err error) {
@@ -95,16 +110,16 @@ func parseRollSchema(schema string) (params probabilities.DiceRollParameters, er
 	return
 }
 
-func parseMode(mode string) (_CalcFunc, error) {
-	if fn, has := modes[mode]; has {
+func parseMode(mode string) (ModeFunc, error) {
+	if fn, has := modesCache[mode]; has {
 		return fn, nil
 	} else {
 		return nil, fmt.Errorf("bad mode: %s", mode)
 	}
 }
 
-func parseOutput(output string) (_DisplayFunc, error) {
-	if fn, has := outputs[output]; has {
+func parseOutput(output string) (PrintFunc, error) {
+	if fn, has := outputsCache[output]; has {
 		return fn, nil
 	} else {
 		return nil, fmt.Errorf("bad output: %s", output)
