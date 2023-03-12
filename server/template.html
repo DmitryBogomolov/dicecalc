@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ .Title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+<body>
+    <h1>{{ .Title }}</h1>
+    <div>
+        <div class="form-group">
+            <label for="mode-input">Mode</label>
+            <select id="mode-input" class="form-control">
+                {{ range .Modes }}
+                <option value="{{ . }}">{{ . }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="output-input">Output</label>
+            <select id="output-input" class="form-control">
+                {{ range .Outputs }}
+                <option value="{{ . }}">{{ . }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="dice-count-input">Dice count <span id="dice-count-text">{{ .DiceCount }}</span></label>
+            <input id="dice-count-input" class="form-control-range" min="1" max="20" value="{{ .DiceCount }}" type="range" />
+        </div>
+        <div class="form-group">
+            <label for="dice-sides-input">Dice sides <span id="dice-sides-text">{{ .DiceSides }}</span></label>
+            <input id="dice-sides-input" class="form-control-range" min="1" max="20" value="{{ .DiceSides }}" type="range" />
+        </div>
+        <button id="calculate-button" type="button" class="btn btn-primary">Calculate</button>
+    </div>
+    <script>
+        document.querySelector('#dice-count-input').addEventListener('input', (e) => {
+            document.querySelector('#dice-count-text').textContent = e.target.value;
+        });
+        document.querySelector('#dice-sides-input').addEventListener('input', (e) => {
+            document.querySelector('#dice-sides-text').textContent = e.target.value;
+        });
+        document.querySelector('#calculate-button').addEventListener('click', () => {
+            const mode = document.querySelector('#mode-input').value;
+            const output = document.querySelector('#output-input').value;
+            const diceCount = document.querySelector('#dice-count-input').value;
+            const diseSides = document.querySelector('#dice-sides-input').value;
+        });
+    </script>
+</body>
+</html>
