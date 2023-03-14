@@ -1,6 +1,7 @@
 package wrapper
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -57,25 +58,30 @@ func RegisterOutput(output string, fn PrintFunc) {
 }
 
 func Process(mode string, schema string, output string) ([]byte, error) {
-	var calcFn ModeFunc
-	var params probabilities.DiceRollParameters
-	var err error
-	if calcFn, err = parseMode(mode); err != nil {
-		return nil, err
+	calcFn, modeErr := parseMode(mode)
+	params, schemaErr := parseRollSchema(schema)
+	displayFn, outputErr := parseOutput(output)
+
+	var parseErrors []string
+	if modeErr != nil {
+		parseErrors = append(parseErrors, modeErr.Error())
 	}
-	if params, err = parseRollSchema(schema); err != nil {
+	if schemaErr != nil {
+		parseErrors = append(parseErrors, schemaErr.Error())
+	}
+	if outputErr != nil {
+		parseErrors = append(parseErrors, outputErr.Error())
+	}
+	if parseErrors != nil {
+		message := strings.Join(parseErrors, ", ")
+		return nil, errors.New(message)
+	}
+
+	probs, err := calcFn(params)
+	if err != nil {
 		return nil, err
 	}
 
-	var probs probabilities.Probabilities
-	if probs, err = calcFn(params); err != nil {
-		return nil, err
-	}
-
-	var displayFn PrintFunc
-	if displayFn, err = parseOutput(output); err != nil {
-		return nil, err
-	}
 	title := fmt.Sprintf("Probabilities of %s (%s) rolls", schema, mode)
 	ret := displayFn(probs, title)
 	return ret, nil
@@ -92,17 +98,17 @@ func Outputs() []string {
 func parseRollSchema(schema string) (params probabilities.DiceRollParameters, err error) {
 	items := strings.Split(strings.ToLower(schema), "d")
 	if len(items) != 2 {
-		err = fmt.Errorf("bad schema: %s", schema)
+		err = fmt.Errorf("bad schema: '%s'", schema)
 		return
 	}
 	var diceCount int
 	if diceCount, err = strconv.Atoi(items[0]); err != nil {
-		err = fmt.Errorf("bad schema: %s", schema)
+		err = fmt.Errorf("bad schema: '%s'", schema)
 		return
 	}
 	var diceSides int
 	if diceSides, err = strconv.Atoi(items[1]); err != nil {
-		err = fmt.Errorf("bad schema: %s", schema)
+		err = fmt.Errorf("bad schema: '%s'", schema)
 		return
 	}
 	params.DiceCount = diceCount
@@ -114,7 +120,7 @@ func parseMode(mode string) (ModeFunc, error) {
 	if fn, has := modesCache[mode]; has {
 		return fn, nil
 	} else {
-		return nil, fmt.Errorf("bad mode: %s", mode)
+		return nil, fmt.Errorf("bad mode: '%s'", mode)
 	}
 }
 
@@ -122,6 +128,6 @@ func parseOutput(output string) (PrintFunc, error) {
 	if fn, has := outputsCache[output]; has {
 		return fn, nil
 	} else {
-		return nil, fmt.Errorf("bad output: %s", output)
+		return nil, fmt.Errorf("bad output: '%s'", output)
 	}
 }
