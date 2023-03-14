@@ -24,15 +24,15 @@ func Print(probs probabilities.Probabilities, title string) []byte {
 	var obj _JsonObject
 	obj.Title = title
 	obj.Total = probs.TotalVariants()
-	var items []_JsonItem
+	items := make([]_JsonItem, probs.Count())
 	probFormat := fmt.Sprintf("%%.%df%%%%", util.GetProbabilityPrecision(probs)-2)
 	for i := 0; i < probs.Count(); i++ {
 		val, count, probability := probs.Item(i)
-		var item _JsonItem
-		item.Value = val
-		item.Count = count
-		item.Probability = fmt.Sprintf(probFormat, probability*100)
-		items = append(items, item)
+		items[i] = _JsonItem{
+			val,
+			count,
+			fmt.Sprintf(probFormat, probability*100),
+		}
 	}
 	obj.Values = items
 	ret, _ := json.MarshalIndent(obj, "", "  ")
