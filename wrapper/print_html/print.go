@@ -16,6 +16,7 @@ var tmpl = template.Must(template.New("svg").Parse(tmplStr))
 
 type _TemplateData struct {
 	Title string
+	Total string
 	Items []_Item
 }
 type _Item struct {
@@ -28,6 +29,7 @@ func Print(probs probabilities.Probabilities, title string) []byte {
 	var builder strings.Builder
 	var data _TemplateData
 	data.Title = title
+	data.Total = fmt.Sprintf("%d", probs.TotalVariants())
 	var items []_Item
 	for i := 0; i < probs.Count(); i++ {
 		val, count, probability := probs.Item(i)
