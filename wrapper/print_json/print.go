@@ -2,8 +2,10 @@ package print_json
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
+	"github.com/DmitryBogomolov/dicecalc/wrapper/util"
 )
 
 type _JsonObject struct {
@@ -13,9 +15,9 @@ type _JsonObject struct {
 }
 
 type _JsonItem struct {
-	Value       int     `json:"value"`
-	Count       uint64  `json:"count"`
-	Probability float64 `json:"probability"`
+	Value       int    `json:"value"`
+	Count       uint64 `json:"count"`
+	Probability string `json:"probability"`
 }
 
 func Print(probs probabilities.Probabilities, title string) []byte {
@@ -23,12 +25,13 @@ func Print(probs probabilities.Probabilities, title string) []byte {
 	obj.Title = title
 	obj.Total = probs.TotalVariants()
 	var items []_JsonItem
+	probFormat := fmt.Sprintf("%%.%df%%%%", util.GetProbabilityPrecision(probs)-2)
 	for i := 0; i < probs.Count(); i++ {
 		val, count, probability := probs.Item(i)
 		var item _JsonItem
 		item.Value = val
 		item.Count = count
-		item.Probability = probability
+		item.Probability = fmt.Sprintf(probFormat, probability*100)
 		items = append(items, item)
 	}
 	obj.Values = items

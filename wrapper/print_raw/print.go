@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
+	"github.com/DmitryBogomolov/dicecalc/wrapper/util"
 	"golang.org/x/exp/constraints"
 )
 
@@ -13,7 +14,8 @@ func Print(probs probabilities.Probabilities, title string) []byte {
 	var builder strings.Builder
 	fmt.Fprintln(&builder, title)
 	valueSize, countSize, ratioSize := getColumnSizes(probs)
-	format := fmt.Sprintf("%%%dd %%%dd %%%d.%df%%%%\n", valueSize, countSize, ratioSize, 4)
+	format := fmt.Sprintf("%%%dd %%%dd %%%d.%df%%%%\n",
+		valueSize, countSize, ratioSize, util.GetProbabilityPrecision(probs)-2)
 	for i := 0; i < probs.Count(); i++ {
 		val, count, probability := probs.Item(i)
 		fmt.Fprintf(&builder, format, val, count, probability*100)

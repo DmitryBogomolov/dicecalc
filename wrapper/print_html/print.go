@@ -7,6 +7,7 @@ import (
 	"text/template"
 
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
+	"github.com/DmitryBogomolov/dicecalc/wrapper/util"
 )
 
 //go:embed template.html
@@ -30,13 +31,14 @@ func Print(probs probabilities.Probabilities, title string) []byte {
 	var data _TemplateData
 	data.Title = title
 	data.Total = fmt.Sprintf("%d", probs.TotalVariants())
+	probFormat := fmt.Sprintf("%%.%df%%%%", util.GetProbabilityPrecision(probs)-2)
 	var items []_Item
 	for i := 0; i < probs.Count(); i++ {
 		val, count, probability := probs.Item(i)
 		var item _Item
 		item.Value = fmt.Sprintf("%d", val)
 		item.Count = fmt.Sprintf("%d", count)
-		item.Probability = fmt.Sprintf("%.2f%%", probability*100)
+		item.Probability = fmt.Sprintf(probFormat, probability*100)
 		items = append(items, item)
 	}
 	data.Items = items

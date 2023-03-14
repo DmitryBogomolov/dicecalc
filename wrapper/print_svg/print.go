@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
+	"github.com/DmitryBogomolov/dicecalc/wrapper/util"
 )
 
 const (
@@ -217,6 +218,7 @@ func collectData(probs probabilities.Probabilities, x1, x2, y1, y2 int) []_DataI
 	maxVal := probs.MaxValue()
 	minProb := probs.MinProbability()
 	maxProb := probs.MaxProbability()
+	textFormat := fmt.Sprintf("%%d (%%.%df%%%%)", util.GetProbabilityPrecision(probs)-2)
 	var items []_DataItem
 	for i := 0; i < probs.Count(); i++ {
 		val, _, prob := probs.Item(i)
@@ -225,7 +227,7 @@ func collectData(probs probabilities.Probabilities, x1, x2, y1, y2 int) []_DataI
 		item.Y = mapValue(prob, minProb, maxProb, y2, y1)
 		item.Value = val
 		item.Probability = prob
-		item.Text = fmt.Sprintf("%d (%.2f%%)", val, prob*100)
+		item.Text = fmt.Sprintf(textFormat, val, prob*100)
 		item.Color = POINT_COLOR
 		item.Size = POINT_SIZE
 		items = append(items, item)
