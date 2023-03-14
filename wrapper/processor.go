@@ -9,6 +9,7 @@ import (
 	"github.com/DmitryBogomolov/dicecalc/minmax_dice"
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
 	"github.com/DmitryBogomolov/dicecalc/sum_dice"
+	"github.com/DmitryBogomolov/dicecalc/wrapper/print_csv"
 	"github.com/DmitryBogomolov/dicecalc/wrapper/print_html"
 	"github.com/DmitryBogomolov/dicecalc/wrapper/print_json"
 	"github.com/DmitryBogomolov/dicecalc/wrapper/print_raw"
@@ -33,6 +34,7 @@ func init() {
 	RegisterOutput("json", print_json.Print)
 	RegisterOutput("html", print_html.Print)
 	RegisterOutput("svg", print_svg.Print)
+	RegisterOutput("csv", print_csv.Print)
 }
 
 func RegisterMode(mode string, fn ModeFunc) {
