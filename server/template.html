@@ -76,7 +76,7 @@
             const output = outputInput.value;
             const diceCount = diceCountInput.value;
             const diseSides = diceSidesInput.value;
-            const query = `/calculate?mode=${mode}&output=${output}&schema=${diceCount}d${diseSides}`;
+            const query = `./calculate?mode=${mode}&output=${output}&schema=${diceCount}d${diseSides}`;
             resultFrame.src = query;
         });
 
