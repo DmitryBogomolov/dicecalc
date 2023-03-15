@@ -10,7 +10,7 @@
     <div class="container-fluid">
         <h2>{{ .Title }}</h2>
         <div class="row">
-                <div class="col-4">
+                <div class="col-4 border p-2">
                     <form>
                         <div class="row mb-3">
                             <label for="mode-input" class="col-sm-2 col-form-label">Mode</label>
@@ -49,27 +49,35 @@
                         <button id="calculate-button" type="button" class="btn btn-primary">Calculate</button>
                     </form>
                 </div>
-                <div class="col-8">
-                    <div class="embed-responsive embed-responsive-21by9">
-                        <iframe id="result-frame" class="embed-responsive-item"></iframe>
+                <div class="col-8 border p-2">
+                    <div class="ratio ratio-21x9">
+                        <iframe id="result-frame" class="d-block w-100 h-100"></iframe>
                     </div>
                 </div>
         </div>
     </div>
     <script>
-        document.querySelector('#dice-count-input').addEventListener('input', (e) => {
-            document.querySelector('#dice-count-text').textContent = e.target.value;
+        const diceCountInput = document.querySelector('#dice-count-input');
+        const diceSidesInput = document.querySelector('#dice-sides-input');
+        const diceCountText = document.querySelector('#dice-count-text');
+        const diceSidesText = document.querySelector('#dice-sides-text');
+        const modeInput = document.querySelector('#mode-input');
+        const outputInput = document.querySelector('#output-input');
+        const resultFrame = document.querySelector('#result-frame');
+
+        diceCountInput.addEventListener('input', (e) => {
+            diceCountText.textContent = e.target.value;
         });
-        document.querySelector('#dice-sides-input').addEventListener('input', (e) => {
-            document.querySelector('#dice-sides-text').textContent = e.target.value;
+        diceSidesInput.addEventListener('input', (e) => {
+            diceSidesText.textContent = e.target.value;
         });
         document.querySelector('#calculate-button').addEventListener('click', () => {
-            const mode = document.querySelector('#mode-input').value;
-            const output = document.querySelector('#output-input').value;
-            const diceCount = document.querySelector('#dice-count-input').value;
-            const diseSides = document.querySelector('#dice-sides-input').value;
+            const mode = modeInput.value;
+            const output = outputInput.value;
+            const diceCount = diceCountInput.value;
+            const diseSides = diceSidesInput.value;
             const query = `/calculate?mode=${mode}&output=${output}&schema=${diceCount}d${diseSides}`;
-            document.querySelector('#result-frame').src = query;
+            resultFrame.src = query;
         });
     </script>
 </body>
