@@ -21,8 +21,8 @@ type _TemplateData struct {
 	Items []_Item
 }
 type _Item struct {
-	Value       string
-	Count       string
+	Value       int
+	Count       uint64
 	Probability string
 }
 
@@ -31,14 +31,14 @@ func Print(probs probabilities.Probabilities, title string) []byte {
 	var data _TemplateData
 	data.Title = title
 	data.Total = fmt.Sprintf("%d", probs.TotalVariants())
-	probFormat := fmt.Sprintf("%%.%df%%%%", util.GetProbabilityPrecision(probs)-2)
+	formatProb := util.GetProbabilityFormatter(probs)
 	items := make([]_Item, probs.Count())
 	for i := 0; i < probs.Count(); i++ {
 		val, count, probability := probs.Item(i)
 		items[i] = _Item{
-			fmt.Sprintf("%d", val),
-			fmt.Sprintf("%d", count),
-			fmt.Sprintf(probFormat, probability*100),
+			val,
+			count,
+			formatProb(probability),
 		}
 	}
 	data.Items = items

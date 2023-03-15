@@ -214,7 +214,7 @@ func collectData(probs probabilities.Probabilities, x1, x2, y1, y2 int) []_DataI
 	maxVal := probs.MaxValue()
 	minProb := probs.MinProbability()
 	maxProb := probs.MaxProbability()
-	textFormat := fmt.Sprintf("%%d (%%.%df%%%%)", util.GetProbabilityPrecision(probs)-2)
+	formatProb := util.GetProbabilityFormatter(probs)
 	items := make([]_DataItem, probs.Count())
 	for i := 0; i < probs.Count(); i++ {
 		val, _, prob := probs.Item(i)
@@ -225,7 +225,7 @@ func collectData(probs probabilities.Probabilities, x1, x2, y1, y2 int) []_DataI
 			},
 			Value:       val,
 			Probability: prob,
-			Text:        fmt.Sprintf(textFormat, val, prob*100),
+			Text:        fmt.Sprintf("%d (%s)", val, formatProb(prob)),
 			Color:       POINT_COLOR,
 			Size:        POINT_SIZE,
 		}
