@@ -14,4 +14,8 @@ func TestPrint(t *testing.T) {
 	ret := print_svg.Print(probs, "Hello World")
 	assert.Contains(t, string(ret), ">Hello World</text>")
 	assert.Equal(t, strings.Count(string(ret), "<circle"), 4)
+	assert.Contains(t, string(ret), "<title>2 (14.3%)</title>")
+	assert.Contains(t, string(ret), "<title>3 (28.6%)</title>")
+	assert.Contains(t, string(ret), "<title>4 (42.9%)</title>")
+	assert.Contains(t, string(ret), "<title>5 (14.3%)</title>")
 }

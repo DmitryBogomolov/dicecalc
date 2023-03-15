@@ -13,7 +13,7 @@ func TestPrint(t *testing.T) {
 	ret := print_raw.Print(probs, "Hello World")
 	assert.Equal(
 		t,
-		[]byte("Hello World\n 2   1  14.2857%\n 3   2  28.5714%\n 4   3  42.8571%\n 5   1  14.2857%\n"),
+		[]byte("Hello World\n 2   1    14.3%\n 3   2    28.6%\n 4   3    42.9%\n 5   1    14.3%\nTotal count: 7\n"),
 		ret,
 	)
 }
