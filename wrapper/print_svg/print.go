@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
+	"github.com/DmitryBogomolov/dicecalc/wrapper/util"
 )
 
 const (
@@ -147,67 +148,63 @@ func ilerp(a, b int, k float64) int {
 }
 
 func collectArgTicks(x1, x2, y, count int) []_Tick {
-	var ticks []_Tick
+	ticks := make([]_Tick, count)
 	for i := 0; i < count; i++ {
 		k := float64(i) / float64(count-1)
-		var tick _Tick
 		x := ilerp(x1, x2, k)
-		tick.Path = fmt.Sprintf("M %d %d L %d %d", x, y, x, y-TICK_SIZE)
-		tick.Color = AXIS_COLOR
-		ticks = append(ticks, tick)
+		ticks[i] = _Tick{
+			Path:  fmt.Sprintf("M %d %d L %d %d", x, y, x, y-TICK_SIZE),
+			Color: AXIS_COLOR,
+		}
 	}
 	return ticks
 }
 
 func collectValTicks(x, y1, y2, count int) []_Tick {
-	var ticks []_Tick
+	ticks := make([]_Tick, count)
 	for i := 0; i < count; i++ {
 		k := float64(i) / float64(count-1)
-		var tick _Tick
 		y := ilerp(y2, y1, k)
-		tick.Path = fmt.Sprintf("M %d %d L %d %d", x, y, x+TICK_SIZE, y)
-		tick.Color = AXIS_COLOR
-		ticks = append(ticks, tick)
+		ticks[i] = _Tick{
+			Path:  fmt.Sprintf("M %d %d L %d %d", x, y, x+TICK_SIZE, y),
+			Color: AXIS_COLOR,
+		}
 	}
 	return ticks
 }
 
 func collectArgLabels(probs probabilities.Probabilities, x1, x2, y, count int) []_Label {
-	var labels []_Label
+	labels := make([]_Label, count)
 	for i := 0; i < count; i++ {
 		k := float64(i) / float64(count-1)
-		var label _Label
-		label.X = ilerp(x1, x2, k)
-		label.Y = y + LABEL_OFFSET
 		val := ilerp(probs.MinValue(), probs.MaxValue(), k)
-		label.Text = fmt.Sprintf("%d", val)
-		label.Color = LABEL_COLOR
-		label.Size = LABEL_SIZE
-		labels = append(labels, label)
+		labels[i] = _Label{
+			_Point: _Point{
+				ilerp(x1, x2, k),
+				y + LABEL_OFFSET,
+			},
+			Text:  fmt.Sprintf("%d", val),
+			Color: LABEL_COLOR,
+			Size:  LABEL_SIZE,
+		}
 	}
 	return labels
 }
 
 func collectValLabels(probs probabilities.Probabilities, x, y1, y2, count int) []_Label {
-	var labels []_Label
+	labels := make([]_Label, count)
 	for i := 0; i < count; i++ {
 		k := float64(i) / float64(count-1)
-		var label _Label
-		label.X = x - LABEL_OFFSET
-		label.Y = ilerp(y2, y1, k)
 		prob := flerp(probs.MinProbability(), probs.MaxProbability(), k)
-		label.Text = fmt.Sprintf("%.2f%%", prob*100)
-		label.Color = LABEL_COLOR
-		label.Size = LABEL_SIZE
-		labels = append(labels, label)
-	}
-	return labels
-}
-
-func collectLabels(probs probabilities.Probabilities, x1, x2, y1, y2, count int) []_Label {
-	labels := make([]_Label, count)
-	labels[0] = _Label{
-		_Point: _Point{X: x1, Y: y1},
+		labels[i] = _Label{
+			_Point: _Point{
+				x - LABEL_OFFSET,
+				ilerp(y2, y1, k),
+			},
+			Text:  fmt.Sprintf("%.2f%%", prob*100),
+			Color: LABEL_COLOR,
+			Size:  LABEL_SIZE,
+		}
 	}
 	return labels
 }
@@ -217,18 +214,21 @@ func collectData(probs probabilities.Probabilities, x1, x2, y1, y2 int) []_DataI
 	maxVal := probs.MaxValue()
 	minProb := probs.MinProbability()
 	maxProb := probs.MaxProbability()
-	var items []_DataItem
+	formatProb := util.GetProbabilityFormatter(probs)
+	items := make([]_DataItem, probs.Count())
 	for i := 0; i < probs.Count(); i++ {
 		val, _, prob := probs.Item(i)
-		var item _DataItem
-		item.X = mapValue(float64(val), float64(minVal), float64(maxVal), x1, x2)
-		item.Y = mapValue(prob, minProb, maxProb, y2, y1)
-		item.Value = val
-		item.Probability = prob
-		item.Text = fmt.Sprintf("%d (%.2f%%)", val, prob*100)
-		item.Color = POINT_COLOR
-		item.Size = POINT_SIZE
-		items = append(items, item)
+		items[i] = _DataItem{
+			_Point: _Point{
+				mapValue(float64(val), float64(minVal), float64(maxVal), x1, x2),
+				mapValue(prob, minProb, maxProb, y2, y1),
+			},
+			Value:       val,
+			Probability: prob,
+			Text:        fmt.Sprintf("%d (%s)", val, formatProb(prob)),
+			Color:       POINT_COLOR,
+			Size:        POINT_SIZE,
+		}
 	}
 	return items
 }
