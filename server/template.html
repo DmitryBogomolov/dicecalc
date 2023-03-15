@@ -35,16 +35,16 @@
                         <div class="row mb-3">
                             <label for="dice-count-input" class="col-sm-2 col-form-label">Dice count</label>
                             <div class="col-sm-9">
-                                <input id="dice-count-input" class="form-range" min="1" max="20" value="{{ .DiceCount }}" type="range" />
+                                <input id="dice-count-input" class="form-range" min="1" max="20" type="range" />
                             </div>
-                            <span id="dice-count-text" class="col-sm-1 col-form-label">{{ .DiceCount }}</span>
+                            <span id="dice-count-text" class="col-sm-1 col-form-label">?</span>
                         </div>
                         <div class="row mb-3">
                             <label for="dice-sides-input" class="col-sm-2 col-form-label">Dice sides</label>
                             <div class="col-sm-9">
-                                <input id="dice-sides-input" class="form-range" min="1" max="20" value="{{ .DiceSides }}" type="range" />
+                                <input id="dice-sides-input" class="form-range" min="1" max="20" type="range" />
                             </div>
-                            <span id="dice-sides-text" class="col-sm-1 col-form-label">{{ .DiceSides }}</span>
+                            <span id="dice-sides-text" class="col-sm-1 col-form-label">?</span>
                         </div>
                         <button id="calculate-button" type="button" class="btn btn-primary">Calculate</button>
                     </form>
@@ -79,6 +79,11 @@
             const query = `/calculate?mode=${mode}&output=${output}&schema=${diceCount}d${diseSides}`;
             resultFrame.src = query;
         });
+
+        diceCountInput.value = diceCountText.textContent = '{{ .Init.DiceCount }}';
+        diceSidesInput.value = diceSidesText.textContent = '{{ .Init.DiceSides }}';
+        modeInput.selectedIndex = Number('{{ .Init.Mode }}');
+        outputInput.selectedIndex = Number('{{ .Init.Output }}');
     </script>
 </body>
 </html>
