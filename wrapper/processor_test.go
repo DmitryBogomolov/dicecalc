@@ -18,7 +18,7 @@ func TestOutputs(t *testing.T) {
 func TestProcess(t *testing.T) {
 	ret, err := wrapper.Process("sum", "1d2", "raw")
 	assert.NoError(t, err)
-	assert.Equal(t, "Probabilities of 1d2 (sum) rolls\n 1   1  50.0%\n 2   1  50.0%\nTotal count: 2\n", string(ret))
+	assert.Equal(t, "Probabilities of 1d2 (sum) rolls\n 1   1    50.0%\n 2   1    50.0%\nTotal count: 2\n", string(ret))
 }
 
 func TestProcessErrors(t *testing.T) {
