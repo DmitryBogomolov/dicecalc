@@ -86,6 +86,7 @@ var contentTypes = map[string]string{
 	"html": "text/html",
 	"json": "application/json",
 	"svg":  "image/svg+xml",
+	"csv":  "text/plain",
 }
 
 func handleCalculate(writer http.ResponseWriter, req *http.Request) {
