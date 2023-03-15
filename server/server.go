@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -45,13 +46,20 @@ func handleRoot(writer http.ResponseWriter, req *http.Request) {
 		http.Error(writer, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
+	// TODO: Temporary for debug.
+	fileObj, _ := os.Open("./server/template.html")
+	defer fileObj.Close()
+	tmplStr_, _ := ioutil.ReadAll(fileObj)
+	tmpl_ := template.Must(template.New(".").Parse(string(tmplStr_)))
+
 	var data _TemplateData
 	data.Title = "Test"
 	data.Modes = wrapper.Modes()
 	data.Outputs = wrapper.Outputs()
 	data.DiceCount = 2
 	data.DiceSides = 6
-	tmpl.Execute(writer, data)
+	tmpl_.Execute(writer, data)
 }
 
 var contentTypes = map[string]string{
