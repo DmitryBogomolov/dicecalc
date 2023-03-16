@@ -25,7 +25,7 @@ func main() {
 		Addr:    fmt.Sprintf(":%d", getPort()),
 		Handler: makeHandler(),
 	}
-	signalChannel := make(chan os.Signal)
+	signalChannel := make(chan os.Signal, 1)
 	signal.Notify(signalChannel, signals...)
 	serverChannel := make(chan error)
 	go runServer(server, serverChannel)
