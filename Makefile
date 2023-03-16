@@ -4,5 +4,5 @@ vet:
 test:
 	@go test -v ./...
 
-mearure:
+outdated_mearure:
 	@go run ./outdated/tester
