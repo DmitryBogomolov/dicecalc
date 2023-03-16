@@ -8,6 +8,13 @@ import (
 	"github.com/DmitryBogomolov/dicecalc/wrapper"
 )
 
+const (
+	DEFAULT_DICE_COUNT = 2
+	DEFAULT_DICE_SIDES = 6
+	DEFAULT_MODE       = "sum"
+	DEFAULT_OUTPUT     = "html"
+)
+
 //go:embed template.html
 var tmplStr string
 var tmpl = template.Must(template.New("/").Parse(tmplStr))

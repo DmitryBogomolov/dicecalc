@@ -12,12 +12,8 @@ import (
 )
 
 const (
-	PORT               = 3001
-	DEFAULT_DICE_COUNT = 2
-	DEFAULT_DICE_SIDES = 6
-	DEFAULT_MODE       = "sum"
-	DEFAULT_OUTPUT     = "html"
-	SHUTDOWN_TIMEOUT   = 5 * time.Second
+	DEFAULT_PORT             = 3001
+	DEFAULT_SHUTDOWN_TIMEOUT = 5 * time.Second
 )
 
 var signals = []os.Signal{
@@ -62,7 +58,7 @@ func runServer(server *http.Server, ch chan<- error) {
 }
 
 func shutdownServer(server *http.Server) error {
-	ctx, cancel := context.WithTimeout(context.Background(), SHUTDOWN_TIMEOUT)
+	ctx, cancel := context.WithTimeout(context.Background(), DEFAULT_SHUTDOWN_TIMEOUT)
 	defer cancel()
 	return server.Shutdown(ctx)
 }
@@ -71,5 +67,5 @@ func getPort() int {
 	if port, err := strconv.Atoi(os.Getenv("PORT")); err == nil {
 		return port
 	}
-	return PORT
+	return DEFAULT_PORT
 }
