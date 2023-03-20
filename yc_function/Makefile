@@ -10,8 +10,8 @@ delete:
 display:
 	@yc serverless function get --name=$(NAME)
 	@yc serverless function version list --function-name=$(NAME)
-	
-pack: $(ZIP_NAME)
+
+pack:
 	@zip -r $(ZIP_NAME) *.go go.mod go.sum
 	@touch $(ZIP_NAME)
 

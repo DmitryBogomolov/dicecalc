@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/DmitryBogomolov/dicecalc/probabilities"
+	"github.com/DmitryBogomolov/dicecalc/server/pages"
 	"github.com/DmitryBogomolov/dicecalc/sum_dice"
 )
 
@@ -28,6 +30,8 @@ type Response struct {
 	IsBase64Encoded   bool                `json:"isBase64Encoded"`
 }
 
+const calculationQuery = `.?mode=${mode}&output=${output}&schema=${diceCount}d${diseSides}`
+
 func Handle(ctx context.Context, data []byte) ([]byte, error) {
 	fmt.Printf("name    : %s\n", ctx.Value("lambdaRuntimeFunctionName").(string))
 	fmt.Printf("version : %s\n", ctx.Value("lambdaRuntimeFunctionVersion").(string))
@@ -45,13 +49,15 @@ func Handle(ctx context.Context, data []byte) ([]byte, error) {
 	})
 
 	message := fmt.Sprintf("Probs: %d\nHello World\n", probs.TotalVariants())
+	var sb strings.Builder
+	pages.RenderSelection(&sb, calculationQuery)
 
 	if isHttp {
 		var res Response
 		res.StatusCode = 200
-		res.Body = message
+		res.Body = sb.String()
 		res.Headers = map[string]string{
-			"content-type": "text/plain",
+			"content-type": "text/html",
 		}
 		return json.Marshal(res)
 	}
