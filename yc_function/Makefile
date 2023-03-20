@@ -12,7 +12,7 @@ display:
 	@yc serverless function version list --function-name=$(NAME)
 	
 pack: $(ZIP_NAME)
-	@zip -r $(ZIP_NAME) *.go
+	@zip -r $(ZIP_NAME) *.go go.mod go.sum
 	@touch $(ZIP_NAME)
 
 deploy: pack

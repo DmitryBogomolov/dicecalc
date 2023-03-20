@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/DmitryBogomolov/dicecalc/probabilities"
+	"github.com/DmitryBogomolov/dicecalc/sum_dice"
 )
 
 type Request struct {
@@ -36,7 +39,12 @@ func Handle(ctx context.Context, data []byte) ([]byte, error) {
 	var req Request
 	isHttp := json.Unmarshal(data, &req) == nil
 
-	message := "Hello World\n"
+	probs, _ := sum_dice.CalculateProbabilities(probabilities.DiceRollParameters{
+		DiceCount: 2,
+		DiceSides: 6,
+	})
+
+	message := fmt.Sprintf("Probs: %d\nHello World\n", probs.TotalVariants())
 
 	if isHttp {
 		var res Response
