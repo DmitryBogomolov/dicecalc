@@ -7,11 +7,13 @@ import (
 	"github.com/DmitryBogomolov/dicecalc/server/pages"
 )
 
+const calculationQuery = `./calculate?mode=${mode}&output=${output}&schema=${diceCount}d${diseSides}`
+
 func handleRoot(writer http.ResponseWriter, req *http.Request) {
 	if !checkMethod(writer, req) {
 		return
 	}
-	if err := pages.RenderSelection(writer); err != nil {
+	if err := pages.RenderSelection(writer, calculationQuery); err != nil {
 		sendError(writer, err)
 	}
 }

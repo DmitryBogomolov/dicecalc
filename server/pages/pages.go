@@ -29,9 +29,10 @@ type _TemplateData struct {
 		Mode      int
 		Output    int
 	}
+	Query string
 }
 
-func RenderSelection(writer io.Writer) error {
+func RenderSelection(writer io.Writer, calculationQuery string) error {
 	// TODO: Temporary for debug.
 	// fileObj, _ := os.Open("./server/pages/template.html")
 	// defer fileObj.Close()
@@ -49,6 +50,7 @@ func RenderSelection(writer io.Writer) error {
 	data.Init.DiceSides = DEFAULT_DICE_SIDES
 	data.Init.Mode = findIndex(modes, DEFAULT_MODE)
 	data.Init.Output = findIndex(outputs, DEFAULT_OUTPUT)
+	data.Query = calculationQuery
 	return tmpl.Execute(writer, data)
 }
 
