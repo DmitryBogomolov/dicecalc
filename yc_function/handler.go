@@ -35,29 +35,41 @@ func Handle(ctx context.Context, req *Request) (*Response, error) {
 	// fmt.Printf("limit   : %dMb\n", ctx.Value("lambdaRuntimeMemoryLimit").(int))
 	// fmt.Printf("request : %s\n", ctx.Value("lambdaRuntimeRequestID").(string))
 
+	if req.HttpMethod != "GET" {
+		return newResponse(405, "text/plain", "Method not allowed\n"), nil
+	}
+
 	schema := req.QueryStringParameters["schema"]
 	mode := req.QueryStringParameters["mode"]
 	output := req.QueryStringParameters["output"]
 
 	var sb strings.Builder
+	var contentType string
 	var err error
 	if schema != "" || mode != "" || output != "" {
+		contentType = pages.GetContentType(output)
 		err = pages.RenderCalculation(&sb, schema, mode, output)
 	} else {
 		funcName := ctx.Value("lambdaRuntimeFunctionName").(string)
+		contentType = "text/html"
 		err = pages.RenderSelection(&sb, fmt.Sprintf("/%s%s", funcName, calculationQuery))
 	}
 
-	var res Response
+	var res *Response
 	if err != nil {
-		res.StatusCode = 500
-		res.Body = err.Error()
+		res = newResponse(400, "text/plain", fmt.Sprintf("Bad request: %s\n", err.Error()))
 	} else {
-		res.StatusCode = 200
-		res.Headers = map[string]string{
-			"content-type": "text/html",
-		}
-		res.Body = sb.String()
+		res = newResponse(200, contentType, sb.String())
 	}
-	return &res, nil
+	return res, nil
+}
+
+func newResponse(statusCode int, contentType string, body string) *Response {
+	return &Response{
+		StatusCode: statusCode,
+		Headers: map[string]string{
+			"content-type": contentType,
+		},
+		Body: body,
+	}
 }

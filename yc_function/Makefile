@@ -11,11 +11,11 @@ display:
 	@yc serverless function get --name=$(NAME)
 	@yc serverless function version list --function-name=$(NAME)
 
-pack:
+$(ZIP_NAME):
 	@zip -r $(ZIP_NAME) *.go go.mod go.sum
 	@touch $(ZIP_NAME)
 
-deploy: pack
+deploy: $(ZIP_NAME)
 	@yc serverless function version create \
 		--function-name=$(NAME) \
 		--runtime golang119 \
@@ -25,7 +25,7 @@ deploy: pack
 		--source-path $(ZIP_NAME)
 
 invoke:
-	@yc serverless function invoke --name=$(NAME)
+	@yc serverless function invoke --name=$(NAME) --data '{"httpMethod":"GET"}'
 
 logs:
 	@yc serverless function logs --name=$(NAME)
