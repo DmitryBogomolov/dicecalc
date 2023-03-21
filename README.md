@@ -46,3 +46,9 @@ Just an opposite to **max**.
 ----
 
 There are [console](./app/) and [server](./server/) wrappers over the library.
+
+----
+
+Yandex Cloud [function](./yc_function/) is deployed.
+
+https://functions.yandexcloud.net/d4eppt029egh1r56fsq2
